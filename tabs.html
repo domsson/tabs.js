@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=Edge">
+    <title>tabs.js Example</title>
+	<script src="tabs.js"></script>
+	<script>
+		function initMyTabs() {
+			initTabs();
+		}
+		window.onload = initMyTabs;
+	</script>
+    <style type="text/css">
+		nav {
+			margin: 1rem;
+			margin-bottom: 0;
+		}
+		nav ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			display: flex;
+		}
+		nav li {
+			margin-right: 0.5rem;
+			margin-bottom: 0;
+			background: #eee;
+			border: 1px solid #333;
+			border-radius: 5px 5px 0 0;
+			border-bottom: none;
+			user-select: none;			
+		}
+		nav li.active {
+			background: #ccc;
+			margin-bottom: -1px;
+		}
+		nav li a {
+			display: block;
+			padding: 0.5rem;
+			color: #555;
+			text-decoration: none;
+		}
+        nav li.active a {
+			color: #000;
+        }
+        .tab {
+			margin: 1rem;
+			margin-top: 0;
+			padding: 1rem;
+			background: #ccc;
+			border: 1px solid #333;
+			border-radius: 0 5px 5px 5px;
+		}
+        .tab {
+			display: none;    
+        }
+        .tab.active {
+			display: block;        
+        }
+    </style>
+</head><body>
+    <header>
+        <h1>tabs.js Example</h1>
+    </header>
+    <main>
+		<!-- First set of Tabs -->
+		<nav>
+			<ul data-tabs>
+				<li><a href="#set1tab1">Tab 1</a></li>
+				<li><a href="#set1tab2">Tab 2</a></li>
+				<li><a href="#set1tab3">Tab 3</a></li>
+			</ul>
+		</nav>
+		<div class="tabbox">
+			<section class="tab" id="set1tab1">
+				<h2>Tabset 1, Tab 1</h2>
+				<p>Content for Tab 1.</p>
+			</section>
+			<section class="tab" id="set1tab2">
+				<h2>Tabset 1, Tab 2</h2>
+				<p>Content for Tab 2.</p>
+			</section>
+			<section class="tab" id="set1tab3">
+				<h2>Tabset 1, Tab 3</h2>
+				<p>Content for Tab 3.</p>
+			</section>
+        </div>
+        <!-- Second set of Tabs -->
+		<nav>
+			<ul data-tabs>
+				<li><a href="#set2tab1">Tab 1</a></li>
+				<li><a href="#set2tab2">Tab 2</a></li>
+				<li><a href="#set2tab3">Tab 3</a></li>
+			</ul>
+		</nav>
+		<section class="tab" id="set2tab1">
+			<h2>Tabset 2, Tab 1</h2>
+			<p>Content for Tab 1.</p>
+		</section>
+		<section class="tab" id="set2tab2">
+			<h2>Tabset 2, Tab 2</h2>
+			<p>Content for Tab 2.</p>
+		</section>
+		<section class="tab" id="set2tab3">
+			<h2>Tabset 2, Tab 3</h2>
+			<p>Content for Tab 3.</p>
+		</section>
+        <!-- Third set of Tabs -->
+		<nav>
+			<ul data-tabs>
+				<li><a href="#set3tab1">Tab 1</a></li>
+				<li><a href="#set3tab2">Tab 2</a></li>
+				<li><a href="#set3tab3">Tab 3</a></li>
+			</ul>
+		</nav>
+		<section class="tab" id="set3tab1">
+			<h2>Tabset 3, Tab 1</h2>
+			<p>Content for Tab 1.</p>
+		</section>
+		<section class="tab" id="set3tab2">
+			<h2>Tabset 3, Tab 2</h2>
+			<p>Content for Tab 2.</p>
+		</section>
+		<section class="tab" id="set3tab3">
+			<h2>Tabset 3, Tab 3</h2>
+			<p>Content for Tab 3.</p>
+		</section>
+        <!-- Fourth set of Tabs -->
+		<nav>
+			<ul data-tabs>
+				<li><a href="#set4tab1">Tab 1</a></li>
+				<li><a href="#set4tab2">Tab 2</a></li>
+				<li><a href="#set4tab3">Tab 3</a></li>
+			</ul>
+		</nav>
+		<section class="tab" id="set4tab1">
+			<h2>Tabset 4, Tab 1</h2>
+			<p>Content for Tab 1.</p>
+		</section>
+		<section class="tab" id="set4tab2">
+			<h2>Tabset 4, Tab 2</h2>
+			<p>Content for Tab 2.</p>
+		</section>
+		<section class="tab" id="set4tab3">
+			<h2>Tabset 4, Tab 3</h2>
+			<p>Content for Tab 3.</p>
+		</section>
+    </main>
+</body></html>
