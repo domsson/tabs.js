@@ -13,7 +13,7 @@
  * - `tab_active`: The CSS class for active tab content elements
  * - `tab_hidden`: The CSS class for hidden tab content elements
  * - `set_hidden`: Shall the hidden attribute be set for hidden tabs?
- * - `anchor_sep`: The separator character used for multiple URL anchors
+ * - `frag_sep`: The separator character used for multiple URL anchors
  */
 function Tabs(o) {
 	// Set options from provided object or use defaults instead
@@ -24,7 +24,7 @@ function Tabs(o) {
 	this.tab_active = (o && o.btn_active) ? o.tab_active : "active";
 	this.tab_hidden = (o && o.tab_hidden) ? o.tab_hidden : "";
 	this.set_hidden = (o && o.set_hidden) ? o.set_hidden : true;
-	this.anchor_sep = (o && o.anchor_sep) ? o.anchor_sep[0] : ":";
+	this.frag_sep = (o && o.frag_sep) ? o.frag_sep[0] : ":";
 	// Declare the member variables that will hold our state
 	this.tabs = {};
 	this.curr = null;
@@ -46,7 +46,7 @@ Tabs.prototype.init = function() {
 	// Get the tab navigation buttons
 	var btns = this.find_btns(tnav, this.btn_attr);
 	// Get the current URL anchors as array
-	var anchors = this.anchors(this.anchor());
+	var frags = this.frags(this.frag());
 	// Loop over all tab buttons we've found
 	var num_btns = btns.length;
 	for (var i=0; i<num_btns; ++i) {
@@ -54,18 +54,18 @@ Tabs.prototype.init = function() {
 		var href = this.href(btns[i], this.btn_attr);
 		if (!href) { continue; }
 		// Extract the anchor string from the `href` (remove the #)
-		var anchor = this.anchor(href);
-		if (!anchor) { continue; }
+		var frag = this.frag(href);
+		if (!frag) { continue; }
 		// Bind our tab button click handler to the button
 		var click_handler = this.goto.bind(this);
 		btns[i].addEventListener("click", click_handler);
 		// Find the tab content element corresponding to this button
-		var tab = document.getElementById(anchor);
+		var tab = document.getElementById(frag);
 		// Add this tab button and tab content to our state (this.tabs)
-		this.tabs[anchor] = {"btn": btns[i], "tab": tab};
+		this.tabs[frag] = {"btn": btns[i], "tab": tab};
 		// Mark this tab button as active (this.curr), if appropriate
-		if (anchors.indexOf(anchor) !== -1 || this.curr === null) {
-			this.curr = anchor;
+		if (frags.indexOf(frag) !== -1 || this.curr === null) {
+			this.curr = frag;
 		}
 	}
 	// No relevant buttons identified, aborting
@@ -140,17 +140,15 @@ Tabs.prototype.goto = function(event) {
 	if (!event) { return; }
 	// Prevent browser from actually scrolling to the anchor
 	event.preventDefault();
-	// If the button doesn't have a 'href' attribute', we can't continue
-	//if (!event.target.href) { return; }
+	// If the button doesn't have a href attribute, we can't continue
 	var href = this.href(event.target, this.btn_attr);
 	if (!href) { return; }
-	// Extract the anchor from the button's 'href' attribtue (remove #)
-	//var anchor = this.anchor(event.target.href);
-	var anchor = this.anchor(href);
+	// Extract the fragment from the button's href attribute (remove #)
+	var frag = this.frag(href);
 	// Abort if the given tab is already the active tab
-	if (anchor === this.curr) { return;	}
+	if (frag === this.curr) { return;	}
 	// Abort if the given tab is not known to this tabset
-	var tab_next = this.tabs[anchor];
+	var tab_next = this.tabs[frag];
 	if (!tab_next) { return; }
 	// Abort if there is no currently active tab (init() failed?)
 	var tab_curr = this.tabs[this.curr];
@@ -159,8 +157,8 @@ Tabs.prototype.goto = function(event) {
 	this.show(tab_next);
 	// Hide the previously active tab
 	this.hide(tab_curr);
-	// Update the URL anchor and our internal state accordingly
-	this.update_anchor(anchor);
+	// Update the URL fragments and our internal state accordingly
+	this.update_frags(frag);
 };
 
 /*
@@ -168,25 +166,25 @@ Tabs.prototype.goto = function(event) {
  * Removes the current ID from the URL anchor and replaces it with the 
  * new one, then updates the internal state (this.curr) as well.
  */
-Tabs.prototype.update_anchor = function(next) {
+Tabs.prototype.update_frags = function(next) {
 	// Get an array with all URL anchors
-	var anchors = this.anchors(this.anchor());
+	var frags = this.frags(this.frag());
 	// See if the previously active tab is in the URL anchors
-	var idx = anchors.indexOf(this.curr);
+	var idx = frags.indexOf(this.curr);
 	// Previous tab id is not in URL anchors yet...
 	if (idx === -1) {
 		// ...so we just add the new active tab's anchor/id
-		anchors.push(next);
+		frags.push(next);
 	}
 	// Previous tab id is in the URL anchors...
 	else {
 		// ...so we overwrite it with the new active tab's anchor/id
-		anchors[idx] = next;
+		frags[idx] = next;
 	}
 	// Build the updated URL anchor string
-	var anchor_str = "#" + anchors.join(this.anchor_sep);
+	var frag_str = "#" + frags.join(this.frag_sep);
 	// Replace the URL anchor string with the updated one
-	history.replaceState(undefined, undefined, anchor_str);
+	history.replaceState(undefined, undefined, frag_str);
 	// Update the internal state
 	this.curr = next;
 };
@@ -243,22 +241,22 @@ Tabs.prototype.hide_all = function() {
 };
 
 /*
- * Extract the anchor from the current URL or, if set, the given string.
- * If the string doesn't contain an anchor, an empty string is returned.
+ * Extract the fragment from the current URL or the given string.
+ * If the string doesn't contain a fragment, "" is returned.
  * Example: "http://example.com#chapter-1" will return "chapter-1".
  */
-Tabs.prototype.anchor = function(str) {
+Tabs.prototype.frag = function(str) {
 	var url = (str) ? str.split("#") : document.URL.split("#");
 	return (url.length > 1) ? url[1] : "";
 };
 
 /*
- * Separates the given anchor string on the anchor separator.
+ * Separates the given fragment string on the fragment separator.
  * If the input string is empty, an empty array is returned.
  * Example: "#hello:world" will return ["hello", "world"].
  */
-Tabs.prototype.anchors = function(anchor) {
-	return (anchor) ? anchor.split(this.anchor_sep) : [];
+Tabs.prototype.frags = function(frag) {
+	return (frag) ? frag.split(this.frag_sep) : [];
 };
 
 /*
