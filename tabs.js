@@ -22,8 +22,9 @@ Tabs.prototype.init = function() {
 	
 	var anchors = this.anchors(this.anchor());
 	
-	for (var btn of btns) {
-		var a = btn.getElementsByTagName("a")[0];
+	var len = btns.length;
+	for (var i = 0; i < len; ++i) {
+		var a = btns[i].getElementsByTagName("a")[0];
 		if (!a) { continue; }
 		
 		var href = a.getAttribute("href");
@@ -33,10 +34,10 @@ Tabs.prototype.init = function() {
 		if (!anchor) { continue; }
 			
 		var clickHandler = this.goto.bind(this);
-		btn.onclick = function(e) { clickHandler(e); }
+		btns[i].onclick = function(e) { clickHandler(e); }
 		
 		var tab = document.getElementById(anchor);
-		this.tabs[anchor] = {"btn": btn, "tab": tab};
+		this.tabs[anchor] = {"btn": btns[i], "tab": tab};
 		
 		// If the URL anchor contains this tab, make it the current one;
 		// otherwise, we select the first tab we're iterating over.
@@ -55,11 +56,12 @@ Tabs.prototype.find_nav = function(attr, name) {
 	var tnavs = document.querySelectorAll(query);
 	if (tnavs.length == 0) { return null; }
 	
-	for (var tnav of tnavs) {
-		if (tnav.hasAttribute(this.attr + "-set")) {
+	var len = tnavs.length;
+	for (var i = 0; i < len; ++i) {
+		if (tnavs[i].hasAttribute(this.attr + "-set")) {
 			continue;
 		}
-		return tnav
+		return tnavs[i];
 	}
 };
 
@@ -155,7 +157,9 @@ Tabs.prototype.anchors = function(anchor) {
 
 function initTabs(attr) {
 	attr = (attr === undefined) ? "data-tabs" : attr;
-	for (var tabnav of document.querySelectorAll("["+attr+"]")) {
-		new Tabs({"name":tabnav.getAttribute(attr), "attr": attr});
+	var tabnavs = document.querySelectorAll("["+attr+"]");
+	var len = tabnavs.length;
+	for (var i = 0; i < len; ++i) {
+		new Tabs({"name":tabnavs[i].getAttribute(attr), "attr": attr});
 	}
 }
