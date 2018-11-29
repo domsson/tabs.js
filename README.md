@@ -50,7 +50,7 @@ Create a `Tabs` instance once the DOM has loaded. For example:
 
     <script>
 		function setupTabs() {
-			new Tabs();
+			(new Tabs()).init();
 		}
 		window.onload = setupTabs;
 	</script>

@@ -28,8 +28,6 @@ function Tabs(o) {
 	// Declare the member variables that will hold our state
 	this.tabs = {};
 	this.curr = null;
-	// Initialize our state
-	this.init();
 }
 
 /*
@@ -58,11 +56,11 @@ Tabs.prototype.init = function() {
 		if (!frag) { continue; }
 		// Bind our tab button click handler to the button
 		var click_handler = this.goto.bind(this);
-		btns[i].addEventListener("click", click_handler);
+		btns[i].addEventListener("click", click_handler, false);
 		// Find the tab content element corresponding to this button
 		var tab = document.getElementById(frag);
 		// Add this tab button and tab content to our state (this.tabs)
-		this.tabs[frag] = {"btn": btns[i], "tab": tab};
+		this.tabs[frag] = { "btn": btns[i], "tab": tab };
 		// Mark this tab button as active (this.curr), if appropriate
 		if (frags.indexOf(frag) !== -1 || this.curr === null) {
 			this.curr = frag;
@@ -270,6 +268,9 @@ function initTabs(attr) {
 	var tabnavs = document.querySelectorAll("["+attr+"]");
 	var len = tabnavs.length;
 	for (var i = 0; i < len; ++i) {
-		new Tabs({"name":tabnavs[i].getAttribute(attr), "attr": attr});
+		(new Tabs({
+			"name":tabnavs[i].getAttribute(attr), 
+			"attr": attr
+		})).init();
 	}
 }
