@@ -48,23 +48,19 @@ many KB of comments in there.
 
 Create a `Tabs` instance once the DOM has loaded. For example:
 
-    <script>
-		function setupTabs() {
-			(new Tabs()).init();
-		}
-		window.onload = setupTabs;
-	</script>
+	function setupTabs() {
+		(new Tabs()).init();
+	}
+	window.onload = setupTabs;
 	
 If you have several tab sets on your page, create one `Tabs` instance 
 for each of them. This can be done in a loop. `tabs.js` comes with such 
 a function, `initTabs(attr)`. You could use it like this:
 
-    <script>
-		function setupTabs() {
-			initTabs("data-tabs");
-		}
-		window.onload = setupTabs;
-	</script>
+	function setupTabs() {
+		initTabs("data-tabs");
+	}
+	window.onload = setupTabs;
 	
 If you don't need that function (or its name collides with another one) 
 you can always rename or remove it. Find it at the end of `tabs.js`.
