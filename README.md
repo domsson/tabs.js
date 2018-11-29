@@ -93,7 +93,8 @@ a new `Tabs` instance. The defaults are as follows:
 		"tab_hidden": "",
 		// Set hidden attribute on hidden tab content elements?
 		"set_hidden": true,
-		// The separator used to split multiple URL fragments
+		// The separator used to split multiple URL fragments;
+		// this needs to be the same for all Tabs instances on a page!
 		"frag_sep": ":"
 	};
 
