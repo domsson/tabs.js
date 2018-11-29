@@ -46,7 +46,7 @@ Tabs.prototype.init = function() {
 	// Get the tab navigation buttons
 	var btns = this.find_btns(tnav, this.btn_attr);
 	var num_btns = btns.length;
-	if (num_btns == 0) { console.log("0 buttons"); return; }
+	if (num_btns == 0) { return; }
 	// Get the current URL anchors as array
 	var anchors = this.anchors(this.anchor());
 	// Loop over all tab buttons we've found
