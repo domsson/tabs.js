@@ -21,9 +21,9 @@ the included `tabs.html` as a starting point.
 - Does not set, impose or require any CSS rules
 - Performs only very little markup changes
 - Easy to use, flexible in how to use
-- Can be configured somewhat
-- Extensively commented source
-- Minified version is less than 3 KB
+- Can be configured to some degree
+- Extensively commented source code
+- Minified version is less than 3 KB (and only ~1 KB gzipped)
 
 ## Markup requirements
 
