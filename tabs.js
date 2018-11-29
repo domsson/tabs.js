@@ -230,6 +230,12 @@ Tabs.prototype.anchors = function(anchor) {
 	return (anchor) ? anchor.split(this.anchor_sep) : [];
 };
 
+/*
+ * Convenience function for initializing all tab sets on a given page.
+ * If you don't need this or its name conflicts with another function,
+ * feel free to remove this. Note, however, that you might then have to 
+ * implement some similar functionality yourself.
+ */
 function initTabs(attr) {
 	attr = (attr === undefined) ? "data-tabs" : attr;
 	var tabnavs = document.querySelectorAll("["+attr+"]");
