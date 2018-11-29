@@ -1,7 +1,7 @@
 # tabs.js
 
-Turn a regular set of anchor links and the associated content elements
-into tabs. Supports arbitrary number of tab sets. No dependencies.
+Turn a regular set of anchor links and the associated content elements 
+into tabs.
 
 ![picture](example.png)
 
