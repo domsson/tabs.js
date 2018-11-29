@@ -16,19 +16,36 @@
  * - `frag_sep`: The separator character used for multiple URL anchors
  */
 function Tabs(o) {
-	// Set options from provided object or use defaults instead
-	this.attr = (o && o.attr) ? o.attr : "data-tabs";
-	this.name = (o && o.name) ? o.name : null;
-	this.btn_attr = (o && o.btn_attr) ? o.btn_attr : null;
-	this.btn_active = (o && o.btn_active) ? o.btn_active : "active";
-	this.tab_active = (o && o.btn_active) ? o.tab_active : "active";
-	this.tab_hidden = (o && o.tab_hidden) ? o.tab_hidden : "";
-	this.set_hidden = (o && o.set_hidden) ? o.set_hidden : true;
-	this.frag_sep = (o && o.frag_sep) ? o.frag_sep[0] : ":";
+	// Default options
+	this.attr       = "data-tabs";
+	this.name       = null;
+	this.btn_attr   = null;
+	this.btn_active = "active";
+	this.tab_active = "active";
+	this.tab_hidden = "";
+	this.set_hidden = true;
+	this.set_frags  = true;
+	this.frag_sep   = ":";
+	// Overwrite defaults with provided options, if any
+	this.set_opts(o);
 	// Declare the member variables that will hold our state
 	this.tabs = {};
 	this.curr = null;
 }
+
+/*
+ * Goes through all properties of the provided object and checks if a
+ * property of the same name exists in this class. If so, the property 
+ * will be overriden with the value provided in the given object.
+ */
+Tabs.prototype.set_opts = function(o) {
+	if (!o) { return; }
+	for (var key in o) {
+		if (this.hasOwnProperty(key)) {
+			this[key] = o[key];
+		}
+	}
+};
 
 /*
  * Tries to find a tab navigation that matches the `attr` and `name` 
@@ -157,6 +174,8 @@ Tabs.prototype.goto = function(event) {
 	this.hide(tab_curr);
 	// Update the URL fragments and our internal state accordingly
 	this.update_frags(frag);
+	// Update the internal state
+	this.curr = frag;
 };
 
 /*
@@ -165,6 +184,7 @@ Tabs.prototype.goto = function(event) {
  * new one, then updates the internal state (this.curr) as well.
  */
 Tabs.prototype.update_frags = function(next) {
+	if (this.set_frags === false) { return; }
 	// Get an array with all URL anchors
 	var frags = this.frags(this.frag());
 	// See if the previously active tab is in the URL anchors
@@ -183,8 +203,6 @@ Tabs.prototype.update_frags = function(next) {
 	var frag_str = "#" + frags.join(this.frag_sep);
 	// Replace the URL anchor string with the updated one
 	history.replaceState(undefined, undefined, frag_str);
-	// Update the internal state
-	this.curr = next;
 };
 
 /*

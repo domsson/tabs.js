@@ -15,7 +15,7 @@ the included `tabs.html` as a starting point.
 - No dependencies, all vanilla JavaScript
 - Supports mutliple tab sets per page
 - Supports nested tab sets
-- Updates the URL fragments based on the currently active tabs
+- Sets the URL fragments based on the active tabs (optional)
 - Your page will still work fine for users without JavaScript
 - Very minimal markup requirements (literally just one attribute)
 - Does not set, impose or require any CSS rules
@@ -90,6 +90,8 @@ a new `Tabs` instance. The defaults are as follows:
 		"tab_hidden": "",
 		// Set hidden attribute on hidden tab content elements?
 		"set_hidden": true,
+		// Manipulate the URL fragments according to the active tab(s)
+		"set_frags": true,
 		// The separator used to split multiple URL fragments;
 		// this needs to be the same for all Tabs instances on a page!
 		"frag_sep": ":"
