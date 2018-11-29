@@ -13,7 +13,8 @@ the included `tabs.html` as a starting point.
 ## Features
 
 - No dependencies, all vanilla JavaScript
-- Works for mutliple tab sets per page
+- Supports mutliple tab sets per page
+- Supports nested tab sets
 - Updates the URL fragments based on the currently active tabs
 - Your page will still work fine for users without JavaScript
 - Very minimal markup requirements (literally just one attribute)
