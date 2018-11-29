@@ -20,6 +20,7 @@ function Tabs(o) {
 	this.btn_active = (o && o.btn_active) ? o.btn_active : "active";
 	this.tab_active = (o && o.btn_active) ? o.tab_active : "active";
 	this.tab_hidden = (o && o.tab_hidden) ? o.tab_hidden : "";
+	this.set_hidden = (o && o.set_hidden) ? o.set_hidden : true;
 	this.anchor_sep = (o && o.anchor_sep) ? o.anchor_sep[0] : ":";
 	// Declare the member variables that will hold our state
 	this.tabs = {};
@@ -39,14 +40,11 @@ Tabs.prototype.init = function() {
 	// Find the tab navigation based on `attr` and `name`
 	var tnav = this.find_nav(this.attr, this.name);
 	if (tnav === null) { return; }
-	
 	// Get the tab navigation buttons
 	var btns = tnav.children;
 	if (btns.length == 0) { return; }
-	
 	// Get the current URL anchors as array
 	var anchors = this.anchors(this.anchor());
-	
 	// Loop over all tab buttons we've found
 	var len = btns.length;
 	for (var i = 0; i < len; ++i) {
@@ -60,8 +58,8 @@ Tabs.prototype.init = function() {
 		var anchor = this.anchor(href);
 		if (!anchor) { continue; }
 		// Bind our tab button click handler to the button
-		var clickHandler = this.goto.bind(this);
-		btns[i].onclick = function(e) { clickHandler(e); };
+		var click_handler = this.goto.bind(this);
+		btns[i].addEventListener("click", click_handler);
 		// Find the tab content element corresponding to this button
 		var tab = document.getElementById(anchor);
 		// Add this tab button and tab content to our state (this.tabs)
@@ -71,7 +69,6 @@ Tabs.prototype.init = function() {
 			this.curr = anchor;
 		}
 	}
-	
 	// Hide/deactive all tabs first
 	this.hide_all();
 	// Now show only the current tab
@@ -161,7 +158,7 @@ Tabs.prototype.update_anchor = function(next) {
 	// Build the updated URL anchor string
 	var anchor_str = "#" + anchors.join(this.anchor_sep);
 	// Replace the URL anchor string with the updated one
-	history.replaceState(undefined, undefined, anchor_str);	
+	history.replaceState(undefined, undefined, anchor_str);
 	// Update the internal state
 	this.curr = next;
 };
@@ -181,6 +178,9 @@ Tabs.prototype.show = function(tab) {
 	if (this.tab_hidden) {
 		tab.tab.classList.remove(this.tab_hidden);
 	}
+	if (this.set_hidden) {
+		tab.tab.removeAttribute("hidden");
+	}
 };
 
 /*
@@ -197,6 +197,9 @@ Tabs.prototype.hide = function(tab) {
 	}
 	if (this.tab_hidden) {
 		tab.tab.classList.add(this.tab_hidden);
+	}
+	if (this.set_hidden) {
+		tab.tab.setAttribute("hidden", "");
 	}
 };
 
