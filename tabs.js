@@ -45,11 +45,10 @@ Tabs.prototype.init = function() {
 	if (tnav === null) { return; }
 	// Get the tab navigation buttons
 	var btns = this.find_btns(tnav, this.btn_attr);
-	var num_btns = btns.length;
-	if (num_btns == 0) { return; }
 	// Get the current URL anchors as array
 	var anchors = this.anchors(this.anchor());
 	// Loop over all tab buttons we've found
+	var num_btns = btns.length;
 	for (var i=0; i<num_btns; ++i) {
 		// Get the button's 'href' attribute (required)
 		var href = this.href(btns[i], this.btn_attr);
@@ -69,6 +68,8 @@ Tabs.prototype.init = function() {
 			this.curr = anchor;
 		}
 	}
+	// No relevant buttons identified, aborting
+	if (this.tabs.length == 0) { return; }
 	// Hide/deactive all tabs first
 	this.hide_all();
 	// Now show only the current tab
