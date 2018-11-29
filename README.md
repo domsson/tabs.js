@@ -1,33 +1,38 @@
 # tabs.js
 
-Defines a `Tabs` class that helps to turn a regular set of anchor links 
-and associated content elements into tabs and tabbed content, where only 
-one content element will be displayed at a time, based on the currently 
-selected tab button. `tabs.js` supports arbitrary number of tab sets.
+Turn a regular set of anchor links and the associated content elements
+into tabs. Supports arbitrary number of tab sets. No dependencies.
 
 ![picture](example.png)
 
 No actual visual changes will be performed, `tabs.js` just adds/removes 
-CSS classes to the buttons and content elements. Making everything look 
-like actual tabs is up to you.
+CSS classes to the buttons and content elements. Making your tabs look 
+like tabs is up to you. But don't worry, it ain't hard and you can use 
+the included `tabs.html` as a starting point.
 
-`tabs.js` focuses on progressive enhancement, meaning that user's who 
-have JavaScript deactivatet, should still be able to use the page fine.
+## Features
 
-Clicking a tab button will update the URL's anchor string accordingly. 
-This also works for multiple tab sets on a single page, in which case 
-the different anchors will be separated with `:` (colon). This enables 
-users to retain the status of selected tabs when bookmarking or sharing 
-the URL.
+- No dependencies, all vanilla JavaScript
+- Works for mutliple tab sets per page
+- Updates the URL fragments based on the currently active tabs
+- Your page will still work fine for users without JavaScript
+- Very minimal markup requirements (literally just one attribute)
+- Does not set, impose or require any CSS rules
+- Performs only very little markup changes
+- Easy to use, flexible in how to use
+- Can be configured somewhat
+- Extensively commented source
 
-The source code is heavily commented. When using `tabs.js` in production, 
-you should minify the code before sending it to the user's machines. The 
-minified version currently weighs in at about 2.4 KB.
+## Markup requirements
 
-# How to use
-
-Check `tabs.html` for an example, including some basic CSS. Basically, 
-you need a HTML structure similiar to this:
+- Set the `data-tabs` attribute on your tab button container
+- Either have the buttons be direct children of the container, or set 
+  an attribute of your choice for every button, then hand that in via 
+  the `btn_attr` option
+- Every button needs to be (or contain) an anchor element with a href
+  that targets a fragment (`#`)
+  
+**Example**
 
 	<ul data-tabs>
 		<li><a href="#chapter1">Chapter 1</a></li>
@@ -35,7 +40,13 @@ you need a HTML structure similiar to this:
 		<li><a href="#chapter3">Chapter 3</a></li>
 	</ul>
 
-Then, you need to create a `Tabs` instance once the DOM has loaded:
+
+## Usage
+
+**Note**: Please remember to minify `tabs.js` in production as there are 
+many KB of comments in there.
+
+Create a `Tabs` instance once the DOM has loaded. For example:
 
     <script>
 		function setupTabs() {
@@ -44,38 +55,56 @@ Then, you need to create a `Tabs` instance once the DOM has loaded:
 		window.onload = setupTabs;
 	</script>
 	
-If you have several set of tabs on your page, create as many `Tabs` 
-objects as you have tab sets. This can be done in a loop. `tabs.js` 
-comes with an additional example method, `initTabs()`, that does this:
+If you have several tab sets on your page, create one `Tabs` instance 
+for each of them. This can be done in a loop. `tabs.js` comes with such 
+a function, `initTabs(attr)`. You could use it like this:
 
-	initTabs("data-tabs"); // Replace 'data-tabs' with whatever you used
- 
-If you want to roll your own, here is the minimum it should be doing:
-
-	function initTabs() {
-		var tabnavs = document.querySelectorAll("data-tabs");
-		var len = tabnavs.length;
-		for (var i = 0; i < len; ++i) {
-			new Tabs();
+    <script>
+		function setupTabs() {
+			initTabs("data-tabs");
 		}
-	}
+		window.onload = setupTabs;
+	</script>
 	
+If you don't need that function (or its name collides with another one) 
+you can always rename or remove it. Find it at the end of `tabs.js`.
+ 
 ## Options
 
 You can pass an object with some configuration options when you create 
-a new `Tabs` instance:
+a new `Tabs` instance. The defaults are as follows:
 
- - `attr`: The HTML attribute to look for
- - `name`: The value of the HTML attribute to look for
- - `btn_active`: The CSS class for active tab buttons
- - `tab_active`: The CSS class for active tab content elements
- - `tab_hidden`: The CSS class for hidden tab content elements
- - `anchor_sep`: The separator character used for multiple URL anchors
+	var options = {
+		// Attribute of the tab navigation element
+		"attr": "data-tabs", 
+		// Attribute value of the tab navigation element, this is useful
+		// if you need to init different tab sets with differen options
+		"name": null, 
+		// Attribute of the tab button elements;
+		// you only need this if your button elements are not direct 
+		// children of the tab navigation element (or if there are other
+		// child elements that should not be treated as tab buttons)
+		"btn_attr": null,
+		// The CSS class to set for active tab button elements
+		"btn_active": "active",
+		// The CSS class to set for active tab content elements
+		"tab_active": "active",
+		// The CSS class to set for hidden tab content elements
+		"tab_hidden": "",
+		// Set hidden attribute on hidden tab content elements?
+		"set_hidden": true,
+		// The separator used to split multiple URL fragments
+		"frag_sep": ":"
+	};
+
 
 ## Things to add or change in the future
 
 Once browser support is solid enough, we should...
 
-- replace most occurences of `var` with `let`
-- replace `for` loops with `for of` loops for array iteration
-- replace `classList.remove`, `classList.add` with `classList.replace`
+- Replace most occurences of `var` with `let`
+- Replace `for` loops with `for of` loops for array iteration
+- Replace `classList.remove`, `classList.add` with `classList.replace`
+- Use `Object.assign` to set (default) options
+- Maybe make it so that the browser back button works after a change
+  of the fragmen part of the URL - not sure about this one yet
