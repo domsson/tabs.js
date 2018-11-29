@@ -25,12 +25,12 @@ the included `tabs.html` as a starting point.
 
 ## Markup requirements
 
-- Set the `data-tabs` attribute on your tab button container
-- Either have the buttons be direct children of the container, or set 
+1. Set the `data-tabs` attribute on your tab button container
+2. Either have the buttons be direct children of the container, or set 
   an attribute of your choice for every button, then hand that in via 
   the `btn_attr` option
-- Every button needs to be (or contain) an anchor element with a href
-  that targets a fragment (`#`)
+3. Every button needs to be (or contain) an anchor element with a href
+  that targets another element's id
   
 **Example**
 
