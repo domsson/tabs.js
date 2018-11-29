@@ -23,6 +23,7 @@ the included `tabs.html` as a starting point.
 - Easy to use, flexible in how to use
 - Can be configured somewhat
 - Extensively commented source
+- Minified version is less than 3 KB
 
 ## Markup requirements
 
