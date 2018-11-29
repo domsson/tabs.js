@@ -141,7 +141,7 @@ Tabs.prototype.href = function(el) {
 		return el.getAttribute("href");
 	}
 	// Find the first <A> with el and returns its href attribute
-	let a = el.querySelector("a");
+	var a = el.querySelector("a");
 	return a ? a.getAttribute("href") : null;
 };
 
