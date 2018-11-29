@@ -8,15 +8,18 @@
  * Takes an optional object with the following possible options:
  * - `attr`: The HTML attribute used to tag the tab navigation element
  * - `name`: The value of the `attr` attribute to look for
+ * - `btn_attr`: The HTML attribute of the tab button elements
  * - `btn_active`: The CSS class for active tab buttons
  * - `tab_active`: The CSS class for active tab content elements
  * - `tab_hidden`: The CSS class for hidden tab content elements
+ * - `set_hidden`: Shall the hidden attribute be set for hidden tabs?
  * - `anchor_sep`: The separator character used for multiple URL anchors
  */
 function Tabs(o) {
 	// Set options from provided object or use defaults instead
 	this.attr = (o && o.attr) ? o.attr : "data-tabs";
 	this.name = (o && o.name) ? o.name : null;
+	this.btn_attr = (o && o.btn_attr) ? o.btn_attr : null;
 	this.btn_active = (o && o.btn_active) ? o.btn_active : "active";
 	this.tab_active = (o && o.btn_active) ? o.tab_active : "active";
 	this.tab_hidden = (o && o.tab_hidden) ? o.tab_hidden : "";
@@ -41,18 +44,15 @@ Tabs.prototype.init = function() {
 	var tnav = this.find_nav(this.attr, this.name);
 	if (tnav === null) { return; }
 	// Get the tab navigation buttons
-	var btns = tnav.children;
-	if (btns.length == 0) { return; }
+	var btns = this.find_btns(tnav, this.btn_attr);
+	var num_btns = btns.length;
+	if (num_btns == 0) { console.log("0 buttons"); return; }
 	// Get the current URL anchors as array
 	var anchors = this.anchors(this.anchor());
 	// Loop over all tab buttons we've found
-	var len = btns.length;
-	for (var i = 0; i < len; ++i) {
-		// Get the button's <a> Element (required)
-		var a = btns[i].getElementsByTagName("a")[0];
-		if (!a) { continue; }
-		// Get the button's <a> Element's 'href' attribute (required)
-		var href = a.getAttribute("href");
+	for (var i=0; i<num_btns; ++i) {
+		// Get the button's 'href' attribute (required)
+		var href = this.href(btns[i], this.btn_attr);
 		if (!href) { continue; }
 		// Extract the anchor string from the `href` (remove the #)
 		var anchor = this.anchor(href);
@@ -89,11 +89,9 @@ Tabs.prototype.find_nav = function(attr, name) {
 	var query = name ? "["+ attr +"="+ name +"]" : "["+ attr +"='']";
 	// Find all elements that match our CSS selector
 	var tnavs = document.querySelectorAll(query);
-	// If we couldn't find any matching elements, return null
-	if (tnavs.length == 0) {return null; }
 	// Iterate over all elements that match our query
 	var len = tnavs.length;
-	for (var i = 0; i < len; ++i) {
+	for (var i=0; i<len; ++i) {
 		// Skip this tab set if it is already processed, 
 		if (tnavs[i].hasAttribute(this.attr +"-set")) {
 			continue;
@@ -103,6 +101,32 @@ Tabs.prototype.find_nav = function(attr, name) {
 	}
 	// Nothing found, return null
 	return null;
+};
+
+/*
+ * If btn_attr is given, all children of tnav that have this attribute 
+ * will be returned, otherwise _all_ children of tnav will be returned.
+ */
+Tabs.prototype.find_btns = function(tnav, btn_attr) {
+	// Get all of tnav's children or those with the given btn_attr set
+	return btn_attr ? 
+		tnav.querySelectorAll("["+ btn_attr +"]") : tnav.children;
+};
+
+/*
+ * If the given element is an <A>, its href attribute will be returned.
+ * Otherwise, searches all children of the given element for <A>s and 
+ * returns the href attribute of the first <A> it could find.
+ */
+Tabs.prototype.href = function(el) {
+	// Check if el is an <A> element itself ...
+	if (el.nodeName.toLowerCase() === "a") {
+		// ... if so, return it's href attribute
+		return el.getAttribute("href");
+	}
+	// Find the first <A> with el and returns its href attribute
+	let a = el.querySelector("a");
+	return a ? a.getAttribute("href") : null;
 };
 
 /*
@@ -116,9 +140,12 @@ Tabs.prototype.goto = function(event) {
 	// Prevent browser from actually scrolling to the anchor
 	event.preventDefault();
 	// If the button doesn't have a 'href' attribute', we can't continue
-	if (!event.target.href) { return; }
+	//if (!event.target.href) { return; }
+	var href = this.href(event.target, this.btn_attr);
+	if (!href) { return; }
 	// Extract the anchor from the button's 'href' attribtue (remove #)
-	var anchor = this.anchor(event.target.href);
+	//var anchor = this.anchor(event.target.href);
+	var anchor = this.anchor(href);
 	// Abort if the given tab is already the active tab
 	if (anchor === this.curr) { return;	}
 	// Abort if the given tab is not known to this tabset
