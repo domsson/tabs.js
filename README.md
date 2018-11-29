@@ -5,6 +5,8 @@ and associated content elements into tabs and tabbed content, where only
 one content element will be displayed at a time, based on the currently 
 selected tab button. `tabs.js` supports arbitrary number of tab sets.
 
+![picture](example.png)
+
 No actual visual changes will be performed, `tabs.js` just adds/removes 
 CSS classes to the buttons and content elements. Making everything look 
 like actual tabs is up to you.
