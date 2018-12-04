@@ -8,8 +8,9 @@
  * Takes an optional object with the following possible options:
  * - `attr`: The HTML attribute used to tag the tab navigation element
  * - `name`: The value of the `attr` attribute to look for
- * - `btn_attr`: The HTML attribute of the tab button elements
+ * - `btn_select`: The HTML attribute of the tab button elements
  * - `btn_active`: The CSS class for active tab buttons
+ * - `tab_class`: The CSS class for every tab content element
  * - `tab_active`: The CSS class for active tab content elements
  * - `tab_hidden`: The CSS class for hidden tab content elements
  * - `set_hidden`: Shall the hidden attribute be set for hidden tabs?
@@ -20,10 +21,11 @@ function Tabs(o) {
 	// Default options
 	this.attr       = "data-tabs";
 	this.name       = null;
-	this.btn_attr   = null;
+	this.btn_select = null;
 	this.btn_active = "active";
+	this.tab_class  = "tab";
 	this.tab_active = "active";
-	this.tab_hidden = "";
+	this.tab_hidden = null;
 	this.set_hidden = true;
 	this.set_frags  = true;
 	this.frag_sep   = ":";
@@ -57,8 +59,8 @@ Tabs.prototype.set_opts = function(o) {
  * tab (either the one specified in the URL anchor, or the first one).
  */
 Tabs.prototype.init = function() {
+	// Find the tab navigation based on `attr` and `name`
 	if (this.tnav === null) {
-		// Find the tab navigation based on `attr` and `name`
 		this.tnav = this.find_nav(this.attr, this.name);
 	}
 	if (this.tnav === null) { return; }
@@ -69,27 +71,29 @@ Tabs.prototype.init = function() {
 	// Loop over all tab buttons we've found
 	var num_btns = btns.length;
 	for (var i=0; i<num_btns; ++i) {
-		console.log("lol");
 		// Get the button's 'href' attribute (required)
 		var href = this.href(btns[i], this.btn_attr);
 		if (!href) { continue; }
 		// Extract the anchor string from the `href` (remove the #)
 		var frag = this.frag(href);
 		if (!frag) { continue; }
+		// Find the tab content element corresponding to this button
+		var tab = document.getElementById(frag);
+		if (!tab) { continue; }
+		// Add the general tab class to the tab content element
+		tab.classList.add(this.tab_class);
 		// Bind our tab button click handler to the button
 		var handler = this.click.bind(this);
 		btns[i].addEventListener("click", handler, false);
-		// Find the tab content element corresponding to this button
-		var tab = document.getElementById(frag);
 		// Add this tab button and tab content to our state (this.tabs)
-		this.tabs[frag] = { "btn": btns[i], "tab": tab };
+		this.tabs[frag] = { "btn": btns[i], "tab": tab, "evt": handler };
 		// Mark this tab button as active (this.curr), if appropriate
 		if (frags.indexOf(frag) !== -1 || this.curr === null) {
 			this.curr = frag;
 		}
 	}
 	// No relevant buttons identified, aborting
-	if (this.tabs.length == 0) { console.log("uh"); return; }
+	if (this.tabs.length == 0) { return; }
 	// Hide/deactive all tabs first
 	this.hide_all();
 	// Now show only the current tab
@@ -130,8 +134,8 @@ Tabs.prototype.find_nav = function(attr, name) {
  */
 Tabs.prototype.find_btns = function(tnav, btn_attr) {
 	// Get all of tnav's children or those with the given btn_attr set
-	return btn_attr ? 
-		tnav.querySelectorAll("["+ btn_attr +"]") : tnav.children;
+	return this.btn_select ? 
+		tnav.querySelectorAll(this.btn_select) : tnav.children;
 };
 
 /*
@@ -223,18 +227,10 @@ Tabs.prototype.update_frags = function(next) {
  */
 Tabs.prototype.show = function(frag) {
 	var t = this.tabs[frag];
-	if (this.btn_active) {
-		t.btn.classList.add(this.btn_active);
-	}
-	if (this.tab_active) {
-		t.tab.classList.add(this.tab_active);
-	}
-	if (this.tab_hidden) {
-		t.tab.classList.remove(this.tab_hidden);
-	}
-	if (this.set_hidden) {
-		t.tab.removeAttribute("hidden");
-	}
+	t.btn.classList.add(this.btn_active);
+	t.tab.classList.add(this.tab_active);
+	t.tab.classList.remove(this.tab_hidden);
+	t.tab.removeAttribute("hidden");
 };
 
 /*
@@ -242,18 +238,10 @@ Tabs.prototype.show = function(frag) {
  */
 Tabs.prototype.hide = function(frag) {
 	var t = this.tabs[frag];
-	if (this.btn_active) {
-		t.btn.classList.remove(this.btn_active);
-	}
-	if (this.tab_active) {
-		t.tab.classList.remove(this.tab_active);
-	}
-	if (this.tab_hidden) {
-		t.tab.classList.add(this.tab_hidden);
-	}
-	if (this.set_hidden) {
-		t.tab.setAttribute("hidden", "");
-	}
+	t.btn.classList.remove(this.btn_active);
+	t.tab.classList.remove(this.tab_active);
+	t.tab.classList.add(this.tab_hidden);
+	t.tab.setAttribute("hidden", "");
 };
 
 /*
@@ -288,15 +276,25 @@ Tabs.prototype.frags = function(frag) {
 
 /*
  * Removes all event handlers and forgets all references to the tabs.
- * It also removes the "data-tabs-set" attribute form the tab nav 
- * element. The reference to that element, and the user options, will be 
- * kept, however. This allows for easy re-initialiation via init().
+ * It also removes the tab classes from all tab content elements and 
+ * the "data-tabs-set" attribute form the tab nav element. The reference 
+ * to that element, and the user options, will be kept, however. This 
+ * allows for easy re-initialization via init().
  */
 Tabs.prototype.kill = function() {
-	var num_tabs = this.tabs.length;
-	var handler = this.click.bind(this);
-	for (var i=0; i<num_tabs; ++i) {
-		this.tabs[i].btn.removeEventListener("click", handler, false);
+	for (var frag in this.tabs) {
+		if (this.tabs.hasOwnProperty(frag)) {
+			var t = this.tabs[frag];
+			// Remove all tab classes we might have set
+			t.tab.classList.remove(this.tab_class, this.tab_hidden, 
+				this.tab_active);
+			// Remove all hidden tab attributes we might have set
+			t.tab.removeAttribute("hidden");
+			// Remove active button classes we might have set
+			t.btn.classList.remove(this.btn_active);
+			// Remove the button event listerner
+			t.btn.removeEventListener("click", t.evt, false);
+		}
 	}
 	// Forget all about the tabs and current tab
 	this.tabs = {};
