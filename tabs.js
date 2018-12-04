@@ -288,6 +288,9 @@ Tabs.prototype.frags = function(frag) {
 
 /*
  * Removes all event handlers and forgets all references to the tabs.
+ * It also removes the "data-tabs-set" attribute form the tab nav 
+ * element. The reference to that element, and the user options, will be 
+ * kept, however. This allows for easy re-initialiation via init().
  */
 Tabs.prototype.kill = function() {
 	var num_tabs = this.tabs.length;
