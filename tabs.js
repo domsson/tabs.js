@@ -30,6 +30,7 @@ function Tabs(o) {
 	// Overwrite defaults with provided options, if any
 	this.set_opts(o);
 	// Declare the member variables that will hold our state
+	this.tnav = null;
 	this.tabs = {};
 	this.curr = null;
 }
@@ -56,16 +57,19 @@ Tabs.prototype.set_opts = function(o) {
  * tab (either the one specified in the URL anchor, or the first one).
  */
 Tabs.prototype.init = function() {
-	// Find the tab navigation based on `attr` and `name`
-	var tnav = this.find_nav(this.attr, this.name);
-	if (tnav === null) { return; }
+	if (this.tnav === null) {
+		// Find the tab navigation based on `attr` and `name`
+		this.tnav = this.find_nav(this.attr, this.name);
+	}
+	if (this.tnav === null) { return; }
 	// Get the tab navigation buttons
-	var btns = this.find_btns(tnav, this.btn_attr);
+	var btns = this.find_btns(this.tnav, this.btn_attr);
 	// Get the current URL anchors as array
 	var frags = this.frags(this.frag());
 	// Loop over all tab buttons we've found
 	var num_btns = btns.length;
 	for (var i=0; i<num_btns; ++i) {
+		console.log("lol");
 		// Get the button's 'href' attribute (required)
 		var href = this.href(btns[i], this.btn_attr);
 		if (!href) { continue; }
@@ -85,13 +89,13 @@ Tabs.prototype.init = function() {
 		}
 	}
 	// No relevant buttons identified, aborting
-	if (this.tabs.length == 0) { return; }
+	if (this.tabs.length == 0) { console.log("uh"); return; }
 	// Hide/deactive all tabs first
 	this.hide_all();
 	// Now show only the current tab
 	this.show(this.curr);
 	// Mark this set of tabs as successfully processed ('set')
-	tnav.setAttribute(this.attr +"-set", "");
+	this.tnav.setAttribute(this.attr +"-set", "");
 };
 
 /*
@@ -291,8 +295,11 @@ Tabs.prototype.kill = function() {
 	for (var i=0; i<num_tabs; ++i) {
 		this.tabs[i].btn.removeEventListener("click", handler, false);
 	}
-	this.tabs = [];
+	// Forget all about the tabs and current tab
+	this.tabs = {};
 	this.curr = null;
+	// Remove the "set" marker from the tab nav element
+	this.tnav.removeAttribute(this.attr +"-set");
 };
 
 /*

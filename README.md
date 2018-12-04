@@ -87,6 +87,21 @@ a new `Tabs` instance:
 
     var tabset = new Tabs({ "attr": "data-foobar" });
     tabset.init();
+    
+## API
+
+| function | description |
+|----------|-------------|
+| init()   | Initialize the tabset, this adds event listeners to the tab buttons |
+| open(id) | Open the tab specified by the given id |
+| kill()   | Remove the event listeners set by `init()` |
+
+When you call kill() on an instance, it will remember the options you 
+have set, as well as the navigation element (tabset) it was originally 
+attached to. This way, you can call init() again to re-initialize this 
+tabset at any point in time. If you ever need to dynamically add or 
+remove a tab from a tabset, you could call kill() and init() to make 
+sure the new or removed tabs are recognized correctly.
 	
 ## Things to change in the future
 
