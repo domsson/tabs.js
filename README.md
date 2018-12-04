@@ -23,7 +23,7 @@ the included `tabs.html` as a starting point.
 - Easy to use, flexible in how to use
 - Can be configured to some degree
 - Extensively commented source code
-- Minified version is less than 3 KB (and only ~1 KB gzipped)
+- Minified version is ~3 KB (and only ~1 KB gzipped)
 
 ## Markup requirements
 
@@ -34,7 +34,7 @@ the included `tabs.html` as a starting point.
 3. Every button needs to be (or contain) an anchor element with a href
   that targets another element's id
   
-**Example**
+### Markup example
 
 	<ul data-tabs>
 		<li><a href="#chapter1">Chapter 1</a></li>
@@ -71,17 +71,17 @@ you can always rename or remove it. Find it at the end of `tabs.js`.
 You can pass an object with some configuration options when you create 
 a new `Tabs` instance:
 
-| name       | default     | description |
+| Name       | Default     | Description |
 |------------|-------------|-------------|
-| attr       | "data-tabs" | Attribute of the tab navigation element |
-| name       | null        | Attribute value of the tab navigation element, this is useful if you need to init different tab sets with differen options |
-| btn_attr   | null        | Attribute of the tab button elements; you only need this if your button elements are not direct children of the tab navigation element (or if there are other child elements that should not be treated as tab buttons) |
-| btn_active | "active"    | The CSS class to set for active tab button elements |
-| tab_active | "active"    | The CSS class to set for active tab content elements |
-| tab_hidden | ""          | The CSS class to set for hidden tab content elements |
-| set_hidden | true        | Set hidden attribute on hidden tab content elements? |
-| set_frags  | true        | Manipulate the URL fragments according to the active tab(s)? |
-| frag_sep   | ":"         | he separator used to split multiple URL fragments; this needs to be the same for all Tabs instances on a page! |
+| `attr`       | `"data-tabs"` | Attribute of the tab navigation element |
+| `name`       | `null`        | Attribute value of the tab navigation element, this is useful if you need to init different tab sets with differen options |
+| `btn_attr`   | `null`        | Attribute of the tab button elements; you only need this if your button elements are not direct children of the tab navigation element (or if there are other child elements that should not be treated as tab buttons) |
+| `btn_active` | `"active"`    | The CSS class to set for active tab button elements |
+| `tab_active` | `"active"`    | The CSS class to set for active tab content elements |
+| `tab_hidden` | `""`          | The CSS class to set for hidden tab content elements |
+| `set_hidden` | `true`        | Set hidden attribute on hidden tab content elements? |
+| `set_frags`  | `true`        | Manipulate the URL fragments according to the active tab(s)? |
+| `frag_sep`   | `":"`         | he separator used to split multiple URL fragments; this needs to be the same for all Tabs instances on a page! |
 
 ### Example
 
@@ -90,17 +90,17 @@ a new `Tabs` instance:
     
 ## API
 
-| function | description |
+| Function | Description |
 |----------|-------------|
 | init()   | Initialize the tabset, this adds event listeners to the tab buttons |
 | open(id) | Open the tab specified by the given id |
 | kill()   | Remove the event listeners set by `init()` |
 
-When you call kill() on an instance, it will remember the options you 
+When you call `kill()` on an instance, it will remember the options you 
 have set, as well as the navigation element (tabset) it was originally 
-attached to. This way, you can call init() again to re-initialize this 
+attached to. This way, you can call `init()` again to re-initialize this 
 tabset at any point in time. If you ever need to dynamically add or 
-remove a tab from a tabset, you could call kill() and init() to make 
+remove a tab from a tabset, you could call `kill()` and `init()` to make 
 sure the new or removed tabs are recognized correctly.
 	
 ## Things to change in the future
