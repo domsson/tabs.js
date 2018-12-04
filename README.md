@@ -42,7 +42,6 @@ the included `tabs.html` as a starting point.
 		<li><a href="#chapter3">Chapter 3</a></li>
 	</ul>
 
-
 ## Usage
 
 **Note**: Please remember to minify `tabs.js` in production as there are 
@@ -70,36 +69,26 @@ you can always rename or remove it. Find it at the end of `tabs.js`.
 ## Options
 
 You can pass an object with some configuration options when you create 
-a new `Tabs` instance. The defaults are as follows:
+a new `Tabs` instance:
 
-	var options = {
-		// Attribute of the tab navigation element
-		"attr": "data-tabs", 
-		// Attribute value of the tab navigation element, this is useful
-		// if you need to init different tab sets with differen options
-		"name": null, 
-		// Attribute of the tab button elements;
-		// you only need this if your button elements are not direct 
-		// children of the tab navigation element (or if there are other
-		// child elements that should not be treated as tab buttons)
-		"btn_attr": null,
-		// The CSS class to set for active tab button elements
-		"btn_active": "active",
-		// The CSS class to set for active tab content elements
-		"tab_active": "active",
-		// The CSS class to set for hidden tab content elements
-		"tab_hidden": "",
-		// Set hidden attribute on hidden tab content elements?
-		"set_hidden": true,
-		// Manipulate the URL fragments according to the active tab(s)
-		"set_frags": true,
-		// The separator used to split multiple URL fragments;
-		// this needs to be the same for all Tabs instances on a page!
-		"frag_sep": ":"
-	};
+| name       | default     | description |
+|------------|-------------|-------------|
+| attr       | "data-tabs" | Attribute of the tab navigation element |
+| name       | null        | Attribute value of the tab navigation element, this is useful if you need to init different tab sets with differen options |
+| btn_attr   | null        | Attribute of the tab button elements; you only need this if your button elements are not direct children of the tab navigation element (or if there are other child elements that should not be treated as tab buttons) |
+| btn_active | "active"    | The CSS class to set for active tab button elements |
+| tab_active | "active"    | The CSS class to set for active tab content elements |
+| tab_hidden | ""          | The CSS class to set for hidden tab content elements |
+| set_hidden | true        | Set hidden attribute on hidden tab content elements? |
+| set_frags  | true        | Manipulate the URL fragments according to the active tab(s)? |
+| frag_sep   | ":"         | he separator used to split multiple URL fragments; this needs to be the same for all Tabs instances on a page! |
 
+### Example
 
-## Things to add or change in the future
+    var tabset = new Tabs({ "attr": "data-foobar" });
+    tabset.init();
+	
+## Things to change in the future
 
 Once browser support is solid enough, we should...
 
