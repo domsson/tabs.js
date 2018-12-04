@@ -13,6 +13,7 @@
  * - `tab_active`: The CSS class for active tab content elements
  * - `tab_hidden`: The CSS class for hidden tab content elements
  * - `set_hidden`: Shall the hidden attribute be set for hidden tabs?
+ * - `set_frags`: Manipulate URL fragments based on active tab(s)?
  * - `frag_sep`: The separator character used for multiple URL anchors
  */
 function Tabs(o) {
@@ -72,8 +73,8 @@ Tabs.prototype.init = function() {
 		var frag = this.frag(href);
 		if (!frag) { continue; }
 		// Bind our tab button click handler to the button
-		var click_handler = this.goto.bind(this);
-		btns[i].addEventListener("click", click_handler, false);
+		var handler = this.click.bind(this);
+		btns[i].addEventListener("click", handler, false);
 		// Find the tab content element corresponding to this button
 		var tab = document.getElementById(frag);
 		// Add this tab button and tab content to our state (this.tabs)
@@ -88,7 +89,7 @@ Tabs.prototype.init = function() {
 	// Hide/deactive all tabs first
 	this.hide_all();
 	// Now show only the current tab
-	this.show(this.tabs[this.curr], null);
+	this.show(this.curr);
 	// Mark this set of tabs as successfully processed ('set')
 	tnav.setAttribute(this.attr +"-set", "");
 };
@@ -150,7 +151,7 @@ Tabs.prototype.href = function(el) {
  * given that there is already a tab active (this.curr) and the clicked 
  * element has an anchor that corresponds with a tab in our tab set.
  */
-Tabs.prototype.goto = function(event) {
+Tabs.prototype.click = function(event) {
 	// If no event is supplied, we can't do our job!
 	if (!event) { return; }
 	// Prevent browser from actually scrolling to the anchor
@@ -161,17 +162,32 @@ Tabs.prototype.goto = function(event) {
 	// Extract the fragment from the button's href attribute (remove #)
 	var frag = this.frag(href);
 	// Abort if the given tab is already the active tab
-	if (frag === this.curr) { return;	}
+	if (frag === this.curr) { return; }
 	// Abort if the given tab is not known to this tabset
-	var tab_next = this.tabs[frag];
-	if (!tab_next) { return; }
+	if (!this.tabs[frag]) { return; }
 	// Abort if there is no currently active tab (init() failed?)
-	var tab_curr = this.tabs[this.curr];
-	if (!tab_curr) { return; }
+	if (!this.tabs[this.curr]) { return; }
 	// Show the tab that corresponds with the clicked tab button
-	this.show(tab_next);
+	this.show(frag);
 	// Hide the previously active tab
-	this.hide(tab_curr);
+	this.hide(this.curr);
+	// Update the URL fragments and our internal state accordingly
+	this.update_frags(frag);
+	// Update the internal state
+	this.curr = frag;
+};
+
+Tabs.prototype.open = function(frag) {
+	// Abort if the given tab is already the active tab
+	if (frag === this.curr) { return; }
+	// Abort if the given tab is not known to this tabset
+	if (!this.tabs[frag]) { return; }
+	// Abort if there is no currently active tab (init() failed?)
+	if (!this.tabs[this.curr]) { return; }
+	// Hide the previously active tab
+	this.hide(this.curr);
+	// Show the tab that corresponds with the clicked tab button
+	this.show(frag);
 	// Update the URL fragments and our internal state accordingly
 	this.update_frags(frag);
 	// Update the internal state
@@ -189,16 +205,9 @@ Tabs.prototype.update_frags = function(next) {
 	var frags = this.frags(this.frag());
 	// See if the previously active tab is in the URL anchors
 	var idx = frags.indexOf(this.curr);
-	// Previous tab id is not in URL anchors yet...
-	if (idx === -1) {
-		// ...so we just add the new active tab's anchor/id
-		frags.push(next);
-	}
-	// Previous tab id is in the URL anchors...
-	else {
-		// ...so we overwrite it with the new active tab's anchor/id
-		frags[idx] = next;
-	}
+	// Add tab ID to URL fragments if the previous tab's ID is not in 
+	// there currently, otherwise replace the previous tab's ID
+	frags[idx == -1 ? frags.length : idx] = next;
 	// Build the updated URL anchor string
 	var frag_str = "#" + frags.join(this.frag_sep);
 	// Replace the URL anchor string with the updated one
@@ -206,42 +215,40 @@ Tabs.prototype.update_frags = function(next) {
 };
 
 /*
- * Show/activate the given tab.
- * tab should be an object with two DOM elements, "tab" and "btn",
- * which hold the tab conent and tab button respectively.
+ * Show/activate the tab identified by the given fragment (id).
  */
-Tabs.prototype.show = function(tab) {
+Tabs.prototype.show = function(frag) {
+	var t = this.tabs[frag];
 	if (this.btn_active) {
-		tab.btn.classList.add(this.btn_active);
+		t.btn.classList.add(this.btn_active);
 	}
 	if (this.tab_active) {
-		tab.tab.classList.add(this.tab_active);
+		t.tab.classList.add(this.tab_active);
 	}
 	if (this.tab_hidden) {
-		tab.tab.classList.remove(this.tab_hidden);
+		t.tab.classList.remove(this.tab_hidden);
 	}
 	if (this.set_hidden) {
-		tab.tab.removeAttribute("hidden");
+		t.tab.removeAttribute("hidden");
 	}
 };
 
 /*
- * Hide/deactivate the given tab.
- * tab should be an object with two DOM elements, "tab" and "btn",
- * which hold the tab conent and tab button respectively.
+ * Hide/deactivate the tab identified by the given fragment (id).
  */
-Tabs.prototype.hide = function(tab) {
+Tabs.prototype.hide = function(frag) {
+	var t = this.tabs[frag];
 	if (this.btn_active) {
-		tab.btn.classList.remove(this.btn_active);
+		t.btn.classList.remove(this.btn_active);
 	}
 	if (this.tab_active) {
-		tab.tab.classList.remove(this.tab_active);
+		t.tab.classList.remove(this.tab_active);
 	}
 	if (this.tab_hidden) {
-		tab.tab.classList.add(this.tab_hidden);
+		t.tab.classList.add(this.tab_hidden);
 	}
 	if (this.set_hidden) {
-		tab.tab.setAttribute("hidden", "");
+		t.tab.setAttribute("hidden", "");
 	}
 };
 
@@ -249,9 +256,9 @@ Tabs.prototype.hide = function(tab) {
  * Hides/deactivates all tabs of this tab set.
  */
 Tabs.prototype.hide_all = function() {
-	for (var key in this.tabs) {
-		if (this.tabs.hasOwnProperty(key)) {
-			this.hide(this.tabs[key]);
+	for (var frag in this.tabs) {
+		if (this.tabs.hasOwnProperty(frag)) {
+			this.hide(frag);
 		}
 	}
 };
@@ -273,6 +280,19 @@ Tabs.prototype.frag = function(str) {
  */
 Tabs.prototype.frags = function(frag) {
 	return (frag) ? frag.split(this.frag_sep) : [];
+};
+
+/*
+ * Removes all event handlers and forgets all references to the tabs.
+ */
+Tabs.prototype.kill = function() {
+	var num_tabs = this.tabs.length;
+	var handler = this.click.bind(this);
+	for (var i=0; i<num_tabs; ++i) {
+		this.tabs[i].btn.removeEventListener("click", handler, false);
+	}
+	this.tabs = [];
+	this.curr = null;
 };
 
 /*
