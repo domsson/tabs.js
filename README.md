@@ -7,8 +7,8 @@ into tabs.
 
 No actual visual changes will be performed, `tabs.js` just adds/removes 
 CSS classes to the buttons and content elements. Making your tabs look 
-like tabs is up to you. But don't worry, it ain't hard and you can use 
-the included `tabs.html` as a starting point.
+like tabs is up to you. But don't worry, it ain't hard. Check the 
+included HTML file to get started.
 
 ## Features
 
