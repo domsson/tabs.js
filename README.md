@@ -13,8 +13,8 @@ included HTML file to get started.
 ## Features
 
 - No dependencies, all vanilla JavaScript
-- Supports mutliple tab sets per page
-- Supports nested tab sets
+- Supports mutliple tabsets per page
+- Supports nested tabsets
 - Sets the URL fragments based on the active tabs (optional)
 - Your page will still work fine for users without JavaScript
 - Very minimal markup requirements (literally just one attribute)
@@ -41,6 +41,9 @@ included HTML file to get started.
 		<li><a href="#chapter2">Chapter 2</a></li>
 		<li><a href="#chapter3">Chapter 3</a></li>
 	</ul>
+	<section id="chapter1"><!-- ... --></section>
+	<section id="chapter2"><!-- ... --></section>
+	<section id="chapter3"><!-- ... --></section>
 
 ## Usage
 
@@ -54,9 +57,9 @@ Create a `Tabs` instance once the DOM has loaded. For example:
 	}
 	window.onload = setupTabs;
 	
-If you have several tab sets on your page, create one `Tabs` instance 
-for each of them. This can be done in a loop. `tabs.js` comes with such 
-a function, `initTabs(attr)`. You could use it like this:
+If you have multiple tabsets on your page, create one `Tabs` instance 
+for each of them. This can be done in a loop. `tabs.js` comes with a 
+function that does that, `initTabs(attr)`. You could use it like this:
 
 	function setupTabs() {
 		initTabs("data-tabs");
@@ -64,15 +67,15 @@ a function, `initTabs(attr)`. You could use it like this:
 	window.onload = setupTabs;
 	
 If you don't need that function (or its name collides with another one) 
-you can always rename or remove it. Find it at the end of `tabs.js`.
+you can always rename or remove it.
  
 ## Options
 
 You can pass an object with some configuration options when you create 
-a new `Tabs` instance:
+a new `Tabs` instance. Possible properties are as follows:
 
-| Name       | Default     | Description |
-|------------|-------------|-------------|
+| Name         | Default     | Description |
+|--------------|-------------|-------------|
 | `attr`       | `"data-tabs"` | Attribute of the tab navigation element |
 | `name`       | `null`        | Attribute value of the tab navigation element, this is useful if you need to init different tab sets with differen options |
 | `btn_select` | `null`        | CSS selector for tab button elements; you only need this if your button elements are not direct children of the tab navigation element (or if there are other child elements that should not be treated as tab buttons) |
@@ -82,7 +85,7 @@ a new `Tabs` instance:
 | `tab_hidden` | `null`        | The CSS class to set for hidden tab content elements |
 | `set_hidden` | `true`        | Set hidden attribute on hidden tab content elements? |
 | `set_frags`  | `true`        | Manipulate the URL fragments according to the active tab(s)? |
-| `frag_sep`   | `":"`         | he separator used to split multiple URL fragments; this needs to be the same for all Tabs instances on a page! |
+| `frag_sep`   | `":"`         | The separator used to split multiple URL fragments; this needs to be the same for all Tabs instances on a page! |
 
 ### Example
 
@@ -91,11 +94,11 @@ a new `Tabs` instance:
     
 ## API
 
-| Function | Description |
-|----------|-------------|
-| init()   | Initialize the tabset, this adds event listeners to the tab buttons |
-| open(id) | Open the tab specified by the given id |
-| kill()   | Remove the event listeners set by `init()` |
+| Function   | Description |
+|------------|-------------|
+| `init()`   | Initialize the tabset, this adds event listeners to the tab buttons |
+| `open(id)` | Open the tab specified by the given id |
+| `kill()`   | Remove the event listeners set by `init()` |
 
 When you call `kill()` on an instance, it will remember the options you 
 have set, as well as the navigation element (tabset) it was originally 
