@@ -160,13 +160,10 @@ Tabs.prototype.click = function(event) {
 	if (!event) { return; }
 	// Prevent browser from actually scrolling to the anchor
 	event.preventDefault();
-	// If the button doesn't have a href attribute, we can't continue
+	// Get the button's href attribute, we can't continue without
 	var href = this.href(event.target, this.btn_attr);
-	if (!href) { return; }
-	// Extract the fragment from the button's href attribute (remove #)
-	var frag = this.frag(href);
-	// Open the tab
-	this.open(frag);
+	// If the button's href is set, let's open the according tab
+	!href || this.open(this.frag(href));	
 };
 
 /*
