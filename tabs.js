@@ -43,7 +43,6 @@ function Tabs(o) {
  * will be overriden with the value provided in the given object.
  */
 Tabs.prototype.set_opts = function(o) {
-	if (!o) { return; }
 	for (var key in o) {
 		if (this.hasOwnProperty(key)) {
 			this[key] = o[key];
@@ -60,10 +59,10 @@ Tabs.prototype.set_opts = function(o) {
  */
 Tabs.prototype.init = function() {
 	// Find the tab navigation based on `attr` and `name`
-	if (this.tnav === null) {
+	if (!this.tnav) {
 		this.tnav = this.find_nav(this.attr, this.name);
 	}
-	if (this.tnav === null) { return; }
+	if (!this.tnav) { return; }
 	// Get the tab navigation buttons
 	var btns = this.find_btns(this.tnav, this.btn_attr);
 	// Get the current URL anchors as array
@@ -93,7 +92,7 @@ Tabs.prototype.init = function() {
 		}
 	}
 	// No relevant buttons identified, aborting
-	if (this.tabs.length == 0) { return; }
+	if (!Object.keys(this.tabs).length) { return; }
 	// Hide/deactive all tabs first
 	this.hide_all();
 	// Now show only the current tab
@@ -111,18 +110,16 @@ Tabs.prototype.init = function() {
  */
 Tabs.prototype.find_nav = function(attr, name) {
 	// Formulate the appropriate CSS selector
-	var query = name ? "["+ attr +"="+ name +"]" : "["+ attr +"='']";
+	var query = '['+ attr +'="'+ (name ? name : "") +'"]';
 	// Find all elements that match our CSS selector
 	var tnavs = document.querySelectorAll(query);
 	// Iterate over all elements that match our query
 	var len = tnavs.length;
 	for (var i=0; i<len; ++i) {
-		// Skip this tab set if it is already processed, 
-		if (tnavs[i].hasAttribute(this.attr +"-set")) {
-			continue;
-		}
-		// We found a matching element that has not been processed yet
-		return tnavs[i];
+		// We found a matching element that has not been processed yet 
+		if (!tnavs[i].hasAttribute(this.attr +"-set")) {
+			return tnavs[i];
+		}		
 	}
 	// Nothing found, return null
 	return null;
@@ -144,9 +141,8 @@ Tabs.prototype.find_btns = function(tnav, btn_attr) {
  * returns the href attribute of the first <A> it could find.
  */
 Tabs.prototype.href = function(el) {
-	// Check if el is an <A> element itself ...
+	// If el is an <A> element itself, return it's href attribute
 	if (el.nodeName.toLowerCase() === "a") {
-		// ... if so, return it's href attribute
 		return el.getAttribute("href");
 	}
 	// Find the first <A> with el and returns its href attribute
@@ -169,22 +165,15 @@ Tabs.prototype.click = function(event) {
 	if (!href) { return; }
 	// Extract the fragment from the button's href attribute (remove #)
 	var frag = this.frag(href);
-	// Abort if the given tab is already the active tab
-	if (frag === this.curr) { return; }
-	// Abort if the given tab is not known to this tabset
-	if (!this.tabs[frag]) { return; }
-	// Abort if there is no currently active tab (init() failed?)
-	if (!this.tabs[this.curr]) { return; }
-	// Show the tab that corresponds with the clicked tab button
-	this.show(frag);
-	// Hide the previously active tab
-	this.hide(this.curr);
-	// Update the URL fragments and our internal state accordingly
-	this.update_frags(frag);
-	// Update the internal state
-	this.curr = frag;
+	// Open the tab
+	this.open(frag);
 };
 
+/*
+ * Opens the given tag (specified by its id) by marking it active and 
+ * un-marking the previously opened tab (using the set CSS classes) and 
+ * then updates the URL fragments and the internal state accordingly.
+ */
 Tabs.prototype.open = function(frag) {
 	// Abort if the given tab is already the active tab
 	if (frag === this.curr) { return; }
