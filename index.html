@@ -8,7 +8,7 @@
 		function initMyTabs() {
 			initTabs();
 		}
-		window.onload = initMyTabs;
+		document.addEventListener("DOMContentLoaded", initMyTabs);
 	</script>
     <style type="text/css">
 		nav {
@@ -60,88 +60,56 @@
     </style>
 </head><body>
     <header>
-        <h1>tabs.js Example</h1>
+        <h1>tabs.js</h1>
     </header>
     <main>
 		<!-- First set of Tabs -->
 		<nav>
 			<ul data-tabs>
-				<li><a href="#set1tab1">Tab 1</a></li>
-				<li><a href="#set1tab2">Tab 2</a></li>
-				<li><a href="#set1tab3">Tab 3</a></li>
+				<li><a href="#about">About</a></li>
+				<li><a href="#advantages">Advantages</a></li>
+				<li><a href="#features">Features</a></li>
 			</ul>
 		</nav>
-		<section id="set1tab1">
-			<h2>Tabset 1, Tab 1</h2>
-			<p>Content for Tab 1.</p>
+		<section id="about">
+			<h2>About tabs,js</h2>
+			<p>tabs.js is a JavaScript class that will help you turn a regular set of anchor links into tabs.</p>
 		</section>
-		<section id="set1tab2">
-			<h2>Tabset 1, Tab 2</h2>
-			<p>Content for Tab 2.</p>
+		<section id="advantages">
+			<h2>Advantages</h2>
+			<ul>
+				<li>tabs.js manipulates URL fragments, so that bookmarking or sharing a link will preserve the opened tabs (can be turned off if undesired)</li>
+				<li>tabs.js has very little markup requirements and does not set any CSS rules, just classes and attributes</li>
+				<li>tabs.js encourages markup that will still work perfectly for users without JavaScript</li>
+			</ul>
 		</section>
-		<section id="set1tab3">
-			<h2>Tabset 1, Tab 3</h2>
-			<p>Content for Tab 3.</p>
+		<section id="features">
+			<h2>Features</h2>
+			<p>tabs.js is rather small (~3KB minified), supports multiple tab sets as well as nested tabs and can be configured to suit most needs.</p>
 		</section>
         <!-- Second set of Tabs -->
 		<nav>
 			<ul data-tabs>
-				<li><a href="#set2tab1">Tab 1</a></li>
-				<li><a href="#set2tab2">Tab 2</a></li>
-				<li><a href="#set2tab3">Tab 3</a></li>
+				<li><a href="#markup">Markup</a></li>
+				<li><a href="#usage">Usage</a></li>
+				<li><a href="#css">Styling</a></li>
 			</ul>
 		</nav>
-		<section id="set2tab1">
-			<h2>Tabset 2, Tab 1</h2>
-			<p>Content for Tab 1.</p>
-		</section>
-		<section id="set2tab2">
-			<h2>Tabset 2, Tab 2</h2>
-			<p>Content for Tab 2.</p>
-		</section>
-		<section id="set2tab3">
-			<h2>Tabset 2, Tab 3</h2>
-			<p>Content for Tab 3.</p>
-		</section>
-        <!-- Third set of Tabs -->
-		<nav>
-			<ul data-tabs>
-				<li><a href="#set3tab1">Tab 1</a></li>
-				<li><a href="#set3tab2">Tab 2</a></li>
-				<li><a href="#set3tab3">Tab 3</a></li>
+		<section id="markup">
+			<h2>Markup requirements</h2>
+			<ul>
+				<li>Have some links that target your tabs (using hashtags and IDs)</li>
+				<li>Make sure those links are within an element that has the <code>data-tabs</code> attribute</li>
+				<li>Make sure the actual tab content elements have the correct IDs set (to match the links)</li>
 			</ul>
-		</nav>
-		<section id="set3tab1">
-			<h2>Tabset 3, Tab 1</h2>
-			<p>Content for Tab 1.</p>
 		</section>
-		<section id="set3tab2">
-			<h2>Tabset 3, Tab 2</h2>
-			<p>Content for Tab 2.</p>
+		<section id="usage">
+			<h2>Usage</h2>
+			<p>For every tabset on your page, create a <code>new Tabs()</code> instance, then call <code>init()</code> on it. If you don't need to refer to the instance later on, this can be done very compact: <code>(new Tabs()).init();</code></p>
 		</section>
-		<section id="set3tab3">
-			<h2>Tabset 3, Tab 3</h2>
-			<p>Content for Tab 3.</p>
-		</section>
-        <!-- Fourth set of Tabs -->
-		<nav>
-			<ul data-tabs>
-				<li><a href="#set4tab1">Tab 1</a></li>
-				<li><a href="#set4tab2">Tab 2</a></li>
-				<li><a href="#set4tab3">Tab 3</a></li>
-			</ul>
-		</nav>
-		<section id="set4tab1">
-			<h2>Tabset 4, Tab 1</h2>
-			<p>Content for Tab 1.</p>
-		</section>
-		<section id="set4tab2">
-			<h2>Tabset 4, Tab 2</h2>
-			<p>Content for Tab 2.</p>
-		</section>
-		<section id="set4tab3">
-			<h2>Tabset 4, Tab 3</h2>
-			<p>Content for Tab 3.</p>
+		<section id="css">
+			<h2>Styling your tabs</h2>
+			<p>It depends a bit on how you structure your markup. Check the source code of this very page for some pointers in the right direction.</p>
 		</section>
     </main>
 </body></html>
