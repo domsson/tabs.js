@@ -60,7 +60,7 @@ Tabs.prototype.set_opts = function(o) {
 Tabs.prototype.init = function() {
 	// Find the tab navigation based on `attr` and `name`
 	if (!this.tnav) {
-		this.tnav = this.find_nav(this.attr, this.name);
+		this.tnav = this.find_tnav(this.attr, this.name);
 	}
 	if (!this.tnav) { return; }
 	// Get the tab navigation buttons
@@ -108,11 +108,11 @@ Tabs.prototype.init = function() {
  * been processed by another Tab instance. Returns null if no matching 
  * element was found or all found elements are already processed.
  */
-Tabs.prototype.find_nav = function(attr, name) {
+Tabs.prototype.find_tnav = function(attr, name) {
 	// Formulate the appropriate CSS selector
-	var query = '['+ attr +'="'+ (name ? name : "") +'"]';
+	var q = '['+ attr +'="'+ (name ? name : "") +'"]';
 	// Find all elements that match our CSS selector
-	var tnavs = document.querySelectorAll(query);
+	var tnavs = document.querySelectorAll(q);
 	// Iterate over all elements that match our query
 	var len = tnavs.length;
 	for (var i=0; i<len; ++i) {
