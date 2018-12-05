@@ -28,11 +28,11 @@ included HTML file to get started.
 ## Markup requirements
 
 1. Set the `data-tabs` attribute on your tab button container
-2. Either have the buttons be direct children of the container, or set 
-  an attribute of your choice for every button, then hand that in via 
-  the `btn_attr` option
-3. Every button needs to be (or contain) an anchor element with a href
-  that targets another element's id
+2. Either have the buttons be direct children of the container, or hand 
+   in the `btn_select` option with a custom CSS selector for the buttons
+3. Every button needs to be (or contain) an anchor element with a `href`
+   that targets another element's `id` (the other element being the tab 
+   container element)
   
 ### Markup example
 
