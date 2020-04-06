@@ -57,6 +57,10 @@ Create a `Tabs` instance once the DOM has loaded. For example:
 	}
 	window.onload = setupTabs;
 	
+Once `tabs.js` has processed a tab set, it will set the `data-tabs-set` 
+attribute on the element that has the `data-tabs` attribute set. If you pass 
+in a custom attribute, that plus `-set` will be used instead.
+ 
 If you have multiple tabsets on your page, create one `Tabs` instance 
 for each of them. This can be done in a loop. `tabs.js` comes with a 
 function that does that, `initTabs(attr)`. You could use it like this:
@@ -83,7 +87,6 @@ a new `Tabs` instance. Possible properties are as follows:
 | `tab_class`  | `"tab"`       | The CSS class to set for every tab content element |
 | `tab_active` | `"active"`    | The CSS class to set for active tab content elements |
 | `tab_hidden` | `null`        | The CSS class to set for hidden tab content elements |
-| `set_hidden` | `true`        | Set hidden attribute on hidden tab content elements? |
 | `set_frags`  | `true`        | Manipulate the URL fragments according to the active tab(s)? |
 | `frag_sep`   | `":"`         | The separator used to split multiple URL fragments; this needs to be the same for all Tabs instances on a page! |
 

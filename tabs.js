@@ -13,7 +13,6 @@
  * - `tab_class`: The CSS class for every tab content element
  * - `tab_active`: The CSS class for active tab content elements
  * - `tab_hidden`: The CSS class for hidden tab content elements
- * - `set_hidden`: Shall the hidden attribute be set for hidden tabs?
  * - `set_frags`: Manipulate URL fragments based on active tab(s)?
  * - `frag_sep`: The separator character used for multiple URL anchors
  */
@@ -26,7 +25,6 @@ function Tabs(o) {
 	this.tab_class  = "tab";
 	this.tab_active = "active";
 	this.tab_hidden = null;
-	this.set_hidden = true;
 	this.set_frags  = true;
 	this.frag_sep   = ":";
 	// Overwrite defaults with provided options, if any
@@ -216,7 +214,6 @@ Tabs.prototype.show = function(frag) {
 	t.btn.classList.add(this.btn_active);
 	t.tab.classList.add(this.tab_active);
 	t.tab.classList.remove(this.tab_hidden);
-	t.tab.removeAttribute("hidden");
 };
 
 /*
@@ -226,8 +223,9 @@ Tabs.prototype.hide = function(frag) {
 	var t = this.tabs[frag];
 	t.btn.classList.remove(this.btn_active);
 	t.tab.classList.remove(this.tab_active);
-	t.tab.classList.add(this.tab_hidden);
-	t.tab.setAttribute("hidden", "");
+	if (this.tab_hidden) {
+		t.tab.classList.add(this.tab_hidden);
+	}
 };
 
 /*
@@ -272,10 +270,9 @@ Tabs.prototype.kill = function() {
 		if (this.tabs.hasOwnProperty(frag)) {
 			var t = this.tabs[frag];
 			// Remove all tab classes we might have set
-			t.tab.classList.remove(this.tab_class, this.tab_hidden, 
-				this.tab_active);
-			// Remove all hidden tab attributes we might have set
-			t.tab.removeAttribute("hidden");
+			t.tab.classList.remove(this.tab_class);
+			t.tab.classList.remove(this.tab_active);
+			t.tab.classList.remove(this.tab_hidden);
 			// Remove active button classes we might have set
 			t.btn.classList.remove(this.btn_active);
 			// Remove the button event listerner
