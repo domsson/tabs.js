@@ -24,7 +24,7 @@ function Tabs(o) {
 	this.btn_active = "active";
 	this.tab_class  = "tab";
 	this.tab_active = "active";
-	this.tab_hidden = null;
+	this.tab_hidden = "hidden";
 	this.set_frags  = true;
 	this.frag_sep   = ":";
 	// Overwrite defaults with provided options, if any
@@ -223,9 +223,7 @@ Tabs.prototype.hide = function(frag) {
 	var t = this.tabs[frag];
 	t.btn.classList.remove(this.btn_active);
 	t.tab.classList.remove(this.tab_active);
-	if (this.tab_hidden) {
-		t.tab.classList.add(this.tab_hidden);
-	}
+	t.tab.classList.add(this.tab_hidden);
 };
 
 /*

@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html><head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="IE=Edge">
-    <title>tabs.js Example</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="IE=Edge">
+	<title>tabs.js Example</title>
 	<script src="tabs.js"></script>
 	<script>
-		function initMyTabs() {
-			initTabs();
-		}
-		document.addEventListener("DOMContentLoaded", initMyTabs);
+		document.addEventListener("DOMContentLoaded", function() { initTabs() });
 	</script>
-    <style type="text/css">
+	<style type="text/css">
+		section {
+			display: grid;
+			grid-template-rows: auto auto;
+			grid-template-columns: auto;
+			padding: 1rem;
+		}
 		nav {
-			margin: 1rem;
-			margin-bottom: 0;
+			grid-row-start: 1;
+			grid-column-start: 1;
+			z-index: 1;
 		}
 		ul[data-tabs-set] {
 			margin: 0;
@@ -23,12 +27,11 @@
 		}
 		ul[data-tabs-set] li {
 			margin-right: 0.5rem;
-			margin-bottom: 0;
 			background: #eee;
 			border: 1px solid #333;
-			border-radius: 5px 5px 0 0;
+			border-radius: .25rem .25rem 0 0;
 			border-bottom: none;
-			user-select: none;			
+			user-select: none;
 		}
 		ul[data-tabs-set] li.active {
 			background: #ccc;
@@ -36,80 +39,81 @@
 		}
 		ul[data-tabs-set] li a {
 			display: block;
-			padding: 0.5rem;
+			padding: .5rem;
 			color: #555;
 			text-decoration: none;
 		}
-        ul[data-tabs-set] li.active a {
+		ul[data-tabs-set] li.active a {
 			color: #000;
-        }
-        .tab {
-			margin: 1rem;
-			margin-top: 0;
+		}
+		.tab {
+			grid-row-start: 2;
+			grid-column-start: 1;
 			padding: 1rem;
 			background: #ccc;
 			border: 1px solid #333;
-			border-radius: 0 5px 5px 5px;
+			border-radius: 0 .25rem .25rem .25rem;
 		}
-        .tab {
-			display: none;    
-        }
-        .tab.active {
-			display: block;        
-        }
-    </style>
+		.tab.hidden {
+			visibility: hidden;
+		}
+	</style>
 </head><body>
-    <header>
-	<h1><a href="https://github.com/domsson/tabs.js">tabs.js</a></h1>
-    </header>
-    <main>
+	<header>
+		<h1><a href="https://github.com/domsson/tabs.js">tabs.js</a></h1>
+	</header>
+	<main>
 		<!-- First set of Tabs -->
-		<nav>
-			<ul data-tabs>
-				<li><a href="#about">About</a></li>
-				<li><a href="#advantages">Advantages</a></li>
-				<li><a href="#features">Features</a></li>
-			</ul>
-		</nav>
-		<section id="about">
-			<h2>About tabs,js</h2>
-			<p>tabs.js is a JavaScript class that will help you turn a regular set of anchor links into tabs.</p>
+	    	<section>
+			<nav>
+				<ul data-tabs>
+					<li><a href="#about">About</a></li>
+					<li><a href="#advantages">Advantages</a></li>
+					<li><a href="#features">Features</a></li>
+				</ul>
+			</nav>
+			<div id="about">
+				<h2>About tabs,js</h2>
+				<p>tabs.js is a JavaScript class that will help you turn a regular set of anchor links into tabs.</p>
+			</div>
+			<div id="advantages">
+				<h2>Advantages</h2>
+				<ul>
+					<li>tabs.js manipulates URL fragments, so that bookmarking or sharing a link will preserve the opened tabs (can be turned off if undesired)</li>
+					<li>tabs.js has very little markup requirements and does not set any CSS rules, just classes and attributes</li>
+					<li>tabs.js encourages markup that will still work perfectly for users without JavaScript</li>
+				</ul>
+			</div>
+			<div id="features">
+				<h2>Features</h2>
+				<p>tabs.js is rather small (~3KB minified), supports multiple tab sets as well as nested tabs and can be configured to suit most needs.</p>
+			</div>
 		</section>
-		<section id="advantages">
-			<h2>Advantages</h2>
-			<ul>
-				<li>tabs.js manipulates URL fragments, so that bookmarking or sharing a link will preserve the opened tabs (can be turned off if undesired)</li>
-				<li>tabs.js has very little markup requirements and does not set any CSS rules, just classes and attributes</li>
-				<li>tabs.js encourages markup that will still work perfectly for users without JavaScript</li>
-			</ul>
-		</section>
-		<section id="features">
-			<h2>Features</h2>
-			<p>tabs.js is rather small (~3KB minified), supports multiple tab sets as well as nested tabs and can be configured to suit most needs.</p>
-		</section>
-        <!-- Second set of Tabs -->
-		<nav>
-			<ul data-tabs>
-				<li><a href="#markup">Markup</a></li>
-				<li><a href="#usage">Usage</a></li>
-				<li><a href="#css">Styling</a></li>
-			</ul>
-		</nav>
-		<section id="markup">
-			<h2>Markup requirements</h2>
-			<ul>
-				<li>Have some links that target your tabs (using hashtags and IDs)</li>
-				<li>Make sure those links are within an element that has the <code>data-tabs</code> attribute</li>
-				<li>Make sure the actual tab content elements have the correct IDs set (to match the links)</li>
-			</ul>
-		</section>
-		<section id="usage">
-			<h2>Usage</h2>
-			<p>For every tabset on your page, create a <code>new Tabs()</code> instance, then call <code>init()</code> on it. If you don't need to refer to the instance later on, this can be done very compact: <code>(new Tabs()).init();</code></p>
-		</section>
-		<section id="css">
-			<h2>Styling your tabs</h2>
-			<p>It depends a bit on how you structure your markup. Check the source code of this very page for some pointers in the right direction.</p>
+		<!-- Second set of Tabs -->
+		<section>
+			<nav>
+				<ul data-tabs>
+					<li><a href="#markup">Markup</a></li>
+					<li><a href="#usage">Usage</a></li>
+					<li><a href="#css">Styling</a></li>
+				</ul>
+			</nav>
+			<div id="markup">
+				<h2>Markup requirements</h2>
+				<ul>
+					<li>Have some links that target your tabs (using hashtags and IDs)</li>
+					<li>Make sure those links are within an element that has the <code>data-tabs</code> attribute</li>
+					<li>Make sure the actual tab content elements have the correct IDs set (to match the links)</li>
+				</ul>
+			</div>
+			<div id="usage">
+				<h2>Usage</h2>
+				<p>For every tabset on your page, create a <code>new Tabs()</code> instance, then call <code>init()</code> on it. If you don't need to refer to the instance later on, this can be done very compact: <code>(new Tabs()).init();</code></p>
+			</div>
+			<div id="css">
+				<h2>Styling your tabs</h2>
+				<p>It depends a bit on how you structure your markup. Check the source code of this very page for some pointers in the right direction.</p>
+			</div>
 		</section>
     </main>
 </body></html>
