@@ -36,6 +36,8 @@ included HTML file to get started.
   
 ### Markup example
 
+This is an example for markup that `tabs.js` can work with:
+
 	<ul data-tabs>
 		<li><a href="#chapter1">Chapter 1</a></li>
 		<li><a href="#chapter2">Chapter 2</a></li>
@@ -44,6 +46,17 @@ included HTML file to get started.
 	<section id="chapter1"><!-- ... --></section>
 	<section id="chapter2"><!-- ... --></section>
 	<section id="chapter3"><!-- ... --></section>
+
+Once `tabs.js` has processed the above, it will look like this:
+
+	<ul data-tabs data-tabs-set="">
+		<li><a href="#chapter1">Chapter 1</a></li>
+		<li><a href="#chapter2">Chapter 2</a></li>
+		<li><a href="#chapter3">Chapter 3</a></li>
+	</ul>
+	<section id="chapter1" class="tab active"><!-- ... --></section>
+	<section id="chapter2" class="tab hidden"><!-- ... --></section>
+	<section id="chapter3" class="tab hidden"><!-- ... --></section>
 
 ## Usage
 

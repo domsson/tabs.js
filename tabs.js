@@ -270,7 +270,7 @@ Tabs.prototype.frag = function(str) {
  * Example: "#hello:world" will return ["hello", "world"].
  */
 Tabs.prototype.frags = function(frag) {
-	return (frag) ? frag.split(this.frag_sep) : [];
+	return frag ? frag.split(this.frag_sep) : [];
 };
 
 /*
