@@ -5,7 +5,8 @@
 	<title>tabs.js Example</title>
 	<script src="tabs.js"></script>
 	<script>
-		document.addEventListener("DOMContentLoaded", function() { initTabs() });
+		function init() { initTabs(); }
+		document.addEventListener("DOMContentLoaded", init);
 	</script>
 	<style type="text/css">
 		.tab-set {
