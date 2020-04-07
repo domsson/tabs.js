@@ -59,7 +59,7 @@ Create a `Tabs` instance once the DOM has loaded. For example:
 	
 Once `tabs.js` has processed a tab set, it will set the `data-tabs-set` 
 attribute on the element that has the `data-tabs` attribute set. If you pass 
-in a custom attribute, that plus `-set` will be used instead.
+in a custom attribute, that  will be used instead of `data-tabs`.
  
 If you have multiple tabsets on your page, create one `Tabs` instance 
 for each of them. This can be done in a loop. `tabs.js` comes with a 
