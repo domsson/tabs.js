@@ -8,51 +8,41 @@
 		document.addEventListener("DOMContentLoaded", function() { initTabs() });
 	</script>
 	<style type="text/css">
-		section {
+		.tab-set {
 			display: grid;
 			grid-template-rows: auto auto;
 			grid-template-columns: auto;
-			padding: 1rem;
 		}
-		nav {
+		.tab-nav {
 			grid-row-start: 1;
 			grid-column-start: 1;
 			z-index: 1;
-		}
-		ul[data-tabs-set] {
 			margin: 0;
 			padding: 0;
 			list-style: none;
 			display: flex;
+			border-bottom: 1px solid #ddd;
 		}
-		ul[data-tabs-set] li {
-			margin-right: 0.5rem;
-			background: #eee;
-			border: 1px solid #333;
-			border-radius: .25rem .25rem 0 0;
-			border-bottom: none;
+		.tab-button {
 			user-select: none;
-		}
-		ul[data-tabs-set] li.active {
-			background: #ccc;
 			margin-bottom: -1px;
 		}
-		ul[data-tabs-set] li a {
+		.tab-button a {
 			display: block;
-			padding: .5rem;
-			color: #555;
+			padding: .5rem 1rem;
 			text-decoration: none;
+			color: #555;
 		}
-		ul[data-tabs-set] li.active a {
-			color: #000;
+		.tab-button.active {
+			border-bottom: 1px solid #555
+		}
+		.tab-button.active a {
+			color: inherit;
 		}
 		.tab {
 			grid-row-start: 2;
 			grid-column-start: 1;
-			padding: 1rem;
-			background: #ccc;
-			border: 1px solid #333;
-			border-radius: 0 .25rem .25rem .25rem;
+			padding: 0 1rem;
 		}
 		.tab.hidden {
 			visibility: hidden;
@@ -64,14 +54,12 @@
 	</header>
 	<main>
 		<!-- First set of Tabs -->
-	    	<section>
-			<nav>
-				<ul data-tabs>
-					<li><a href="#about">About</a></li>
-					<li><a href="#advantages">Advantages</a></li>
-					<li><a href="#features">Features</a></li>
-				</ul>
-			</nav>
+	    	<section class="tab-set">
+			<ul data-tabs>
+				<li><a href="#about">About</a></li>
+				<li><a href="#advantages">Advantages</a></li>
+				<li><a href="#features">Features</a></li>
+			</ul>
 			<div id="about">
 				<h2>About tabs.js</h2>
 				<p>tabs.js is a JavaScript class that will help you turn a regular set of anchor links into tabs.</p>
@@ -90,14 +78,12 @@
 			</div>
 		</section>
 		<!-- Second set of Tabs -->
-		<section>
-			<nav>
-				<ul data-tabs>
-					<li><a href="#markup">Markup</a></li>
-					<li><a href="#usage">Usage</a></li>
-					<li><a href="#css">Styling</a></li>
-				</ul>
-			</nav>
+		<section class="tab-set">
+			<ul data-tabs>
+				<li><a href="#markup">Markup</a></li>
+				<li><a href="#usage">Usage</a></li>
+				<li><a href="#css">Styling</a></li>
+			</ul>
 			<div id="markup">
 				<h2>Markup requirements</h2>
 				<ul>

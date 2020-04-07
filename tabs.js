@@ -8,9 +8,11 @@
  * Takes an optional object with the following possible options:
  * - `attr`: The HTML attribute used to tag the tab navigation element
  * - `name`: The value of the `attr` attribute to look for
+ * - `nav_class`: CSS class to set on the tab navigation
  * - `btn_select`: CSS selector for tab button elements
+ * - `btn_class`: CSS class to set on all tab buttons
  * - `btn_active`: CSS class to set on active tab buttons
- * - `tab_class`:  CSS class to set on tab content elements
+ * - `tab_class`:  CSS class to set on all tab content elements
  * - `tab_active`: CSS class to set on active tab content elements
  * - `tab_hidden`: CSS class to set on hidden tab content elements
  * - `set_frags`: Manipulate URL fragments based on active tab(s)?
@@ -20,7 +22,9 @@ function Tabs(o) {
 	// Get options (or set to sensible defaults)
 	this.attr       = this.get_opt(o, "attr",       "data-tabs");
 	this.name       = this.get_opt(o, "name",       null);
+	this.nav_class  = this.get_opt(o, "nav_class",  "tab-nav");
 	this.btn_select = this.get_opt(o, "btn_select", null);
+	this.btn_class  = this.get_opt(o, "btn_class",  "tab-button");
 	this.btn_active = this.get_opt(o, "btn_active", "active");
 	this.tab_class  = this.get_opt(o, "tab_class",  "tab");
 	this.tab_active = this.get_opt(o, "tab_active", "active");
@@ -88,6 +92,8 @@ Tabs.prototype.init = function() {
 		// Find the tab content element corresponding to this button
 		var tab = document.getElementById(frag);
 		if (!tab) { continue; }
+		// Add the general button class to this button
+		this.add_class(btns[i], this.btn_class);
 		// Add the general tab class to the tab content element
 		this.add_class(tab, this.tab_class);
 		// Bind our tab button click handler to the button
@@ -106,6 +112,8 @@ Tabs.prototype.init = function() {
 	this.hide_all();
 	// Now show only the current tab
 	this.show(this.curr);
+	// Add tab navigation class
+	this.add_class(this.tnav, this.nav_class);
 	// Mark this set of tabs as successfully processed ('set')
 	this.tnav.setAttribute(this.attr + "-set", "");
 	return true;
@@ -288,7 +296,8 @@ Tabs.prototype.kill = function() {
 			this.rem_class(t.tab, this.tab_class);
 			this.rem_class(t.tab, this.tab_active);
 			this.rem_class(t.tab, this.tab_hidden);
-			// Remove active button classes we might have set
+			// Remove button classes we might have set
+			this.rem_class(t.btn, this.btn_class);
 			this.rem_class(t.btn, this.btn_active);
 			// Remove the button event listerner
 			t.btn.removeEventListener("click", t.evt, false);
@@ -297,6 +306,8 @@ Tabs.prototype.kill = function() {
 	// Forget all about the tabs and current tab
 	this.tabs = {};
 	this.curr = null;
+	// Remove class from nav
+	this.rem_class(this.tnav, this.nav_class);
 	// Remove the "set" marker from the tab nav element
 	this.tnav.removeAttribute(this.attr + "-set");
 };

@@ -93,15 +93,17 @@ a new `Tabs` instance. Possible properties are as follows:
 
 | Name         | Default     | Description |
 |--------------|-------------|-------------|
-| `attr`       | `"data-tabs"` | Attribute of the tab navigation element |
-| `name`       | `null`        | Attribute value of the tab navigation element, this is useful if you need to init different tab sets with differen options |
-| `btn_select` | `null`        | CSS selector for tab button elements; you only need this if your button elements are not direct children of the tab navigation element (or if there are other child elements that should not be treated as tab buttons) |
-| `btn_active` | `"active"`    | The CSS class to set for active tab button elements |
-| `tab_class`  | `"tab"`       | The CSS class to set for every tab content element |
-| `tab_active` | `"active"`    | The CSS class to set for active tab content elements |
-| `tab_hidden` | `null`        | The CSS class to set for hidden tab content elements |
-| `set_frags`  | `true`        | Manipulate the URL fragments according to the active tab(s)? |
-| `frag_sep`   | `":"`         | The separator used to split multiple URL fragments; this needs to be the same for all Tabs instances on a page! |
+| `attr`       | `"data-tabs"`  | Attribute of the tab navigation element |
+| `name`       | `null`         | Attribute value of the tab navigation element, this is useful if you need to init different tab sets with differen options |
+| `nav_class`  | `"tab-nav"`    | CSS class to set on the tab navigation (element that carries the `attr`) |
+| `btn_select` | `null`         | CSS selector for tab buttons; you only need this if your button elements are not direct children of the tab navigation element (or if there are other child elements that should not be treated as tab buttons) |
+| `btn_class`  | `"tab-button"` | CSS class to add to all processed tab buttons |
+| `btn_active` | `"active"`     | The CSS class to set for active tab buttons |
+| `tab_class`  | `"tab"`        | The CSS class to set for every tab content element |
+| `tab_active` | `"active"`     | The CSS class to set for active tab content elements |
+| `tab_hidden` | `null`         | The CSS class to set for hidden tab content elements |
+| `set_frags`  | `true`         | Manipulate the URL fragments according to the active tab(s)? |
+| `frag_sep`   | `":"`          | The separator used to split multiple URL fragments; this needs to be the same for all Tabs instances on a page! |
 
 ### Example
 
