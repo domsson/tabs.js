@@ -8,28 +8,27 @@
  * Takes an optional object with the following possible options:
  * - `attr`: The HTML attribute used to tag the tab navigation element
  * - `name`: The value of the `attr` attribute to look for
- * - `btn_select`: The HTML attribute of the tab button elements
- * - `btn_active`: The CSS class for active tab buttons
- * - `tab_class`: The CSS class for every tab content element
- * - `tab_active`: The CSS class for active tab content elements
- * - `tab_hidden`: The CSS class for hidden tab content elements
+ * - `btn_select`: CSS selector for tab button elements
+ * - `btn_active`: CSS class to set on active tab buttons
+ * - `tab_class`:  CSS class to set on tab content elements
+ * - `tab_active`: CSS class to set on active tab content elements
+ * - `tab_hidden`: CSS class to set on hidden tab content elements
  * - `set_frags`: Manipulate URL fragments based on active tab(s)?
- * - `frag_sep`: The separator character used for multiple URL anchors
+ * - `frag_sep`:  The separator character used for multiple URL anchors
  */
 function Tabs(o) {
-	// Default options
-	this.attr       = "data-tabs";
-	this.name       = null;
-	this.btn_select = null;
-	this.btn_active = "active";
-	this.tab_class  = "tab";
-	this.tab_active = "active";
-	this.tab_hidden = "hidden";
-	this.set_frags  = true;
-	this.frag_sep   = ":";
-	// Overwrite defaults with provided options, if any
-	this.set_opts(o);
-	// Declare the member variables that will hold our state
+	// Get options (or set to sensible defaults)
+	this.attr       = this.get_opt(o, "attr",       "data-tabs");
+	this.name       = this.get_opt(o, "name",       null);
+	this.btn_select = this.get_opt(o, "btn_select", null);
+	this.btn_active = this.get_opt(o, "btn_active", "active");
+	this.tab_class  = this.get_opt(o, "tab_class",  "tab");
+	this.tab_active = this.get_opt(o, "tab_active", "active");
+	this.tab_hidden = this.get_opt(o, "tab_hidden", "hidden");
+	this.set_frags  = this.get_opt(o, "set_frags",  true);
+	this.frag_sep   = this.get_opt(o, "frag_sep",   ":");
+	
+	// State variables 
 	this.tnav = null;
 	this.tabs = {};
 	this.curr = null;
@@ -40,12 +39,24 @@ function Tabs(o) {
  * property of the same name exists in this class. If so, the property 
  * will be overriden with the value provided in the given object.
  */
-Tabs.prototype.set_opts = function(o) {
-	for (var key in o) {
-		if (this.hasOwnProperty(key)) {
-			this[key] = o[key];
-		}
-	}
+Tabs.prototype.get_opt = function(obj, opt, def) {
+	return obj.hasOwnProperty(opt) ? obj[opt] : def;
+};
+
+/*
+ * Add the given CSS class to the given element. If the given class is falsy 
+ * (for example `null` or an empty string), this function does nothing.
+ */
+Tabs.prototype.add_class = function(ele, c) {
+	c && ele.classList.add(c);
+};
+
+/*
+ * Remove the given CSS class to the given element. If the given class is falsy
+ * (for example `null` or an empty string), this function does nothing.
+ */
+Tabs.prototype.rem_class = function(ele, c) {
+	c && ele.classList.remove(c);
 };
 
 /*
@@ -54,22 +65,22 @@ Tabs.prototype.set_opts = function(o) {
  * within it, then populates the `this.tabs` object accordingly.
  * If all required elements could be found, it will hide all but one 
  * tab (either the one specified in the URL anchor, or the first one).
+ * Returns `true` on success`, `false` if initialization failed.
  */
 Tabs.prototype.init = function() {
 	// Find the tab navigation based on `attr` and `name`
-	if (!this.tnav) {
-		this.tnav = this.find_tnav(this.attr, this.name);
-	}
-	if (!this.tnav) { return; }
+	this.tnav = this.find_tnav();
+	// Abort if no suitable element could be found
+	if (!this.tnav) { return false; }
 	// Get the tab navigation buttons
-	var btns = this.find_btns(this.tnav, this.btn_attr);
+	var btns = this.find_btns();
 	// Get the current URL anchors as array
 	var frags = this.frags(this.frag());
 	// Loop over all tab buttons we've found
 	var num_btns = btns.length;
 	for (var i=0; i<num_btns; ++i) {
 		// Get the button's 'href' attribute (required)
-		var href = this.href(btns[i], this.btn_attr);
+		var href = this.find_href(btns[i]);
 		if (!href) { continue; }
 		// Extract the anchor string from the `href` (remove the #)
 		var frag = this.frag(href);
@@ -78,7 +89,7 @@ Tabs.prototype.init = function() {
 		var tab = document.getElementById(frag);
 		if (!tab) { continue; }
 		// Add the general tab class to the tab content element
-		tab.classList.add(this.tab_class);
+		this.add_class(tab, this.tab_class);
 		// Bind our tab button click handler to the button
 		var handler = this.click.bind(this);
 		btns[i].addEventListener("click", handler, false);
@@ -90,32 +101,37 @@ Tabs.prototype.init = function() {
 		}
 	}
 	// No relevant buttons identified, aborting
-	if (!Object.keys(this.tabs).length) { return; }
+	if (!Object.keys(this.tabs).length) { return false; }
 	// Hide/deactive all tabs first
 	this.hide_all();
 	// Now show only the current tab
 	this.show(this.curr);
 	// Mark this set of tabs as successfully processed ('set')
-	this.tnav.setAttribute(this.attr +"-set", "");
+	this.tnav.setAttribute(this.attr + "-set", "");
+	return true;
 };
 
 /*
- * Tries to find the DOM element that matches the given attribute `attr` 
- * and value `name`. If no name is given, goes through all elements with 
- * the given attribute and returns the first one that has not already 
- * been processed by another Tab instance. Returns null if no matching 
- * element was found or all found elements are already processed.
+ * Tries to find an element that matches out `this.attr` attribute, possibily 
+ * with the given attribute value `this.name`, if set, which has not yet been 
+ * processed (as indicated by the presence of the "<this.attr>-set" attribute. 
+ * Returns the first matching element that has not already been processed or
+ * null if no matching element was found or all of them were already processed.
+ * If `this.tnav` is already set (has any truthy value), this function does 
+ * nothing and simply returns `this.tnav`.
  */
-Tabs.prototype.find_tnav = function(attr, name) {
+Tabs.prototype.find_tnav = function() {
+	// If `tnav` is already set, we do nothing and return it
+	if (this.tnav) { return this.tnav; }
 	// Formulate the appropriate CSS selector
-	var q = '['+ attr +'="'+ (name ? name : "") +'"]';
+	var q = '['+ this.attr +'="'+ (this.name ? this.name : "") +'"]';
 	// Find all elements that match our CSS selector
 	var tnavs = document.querySelectorAll(q);
 	// Iterate over all elements that match our query
 	var len = tnavs.length;
-	for (var i=0; i<len; ++i) {
+	for (var i = 0; i < len; ++i) {
 		// We found a matching element that has not been processed yet 
-		if (!tnavs[i].hasAttribute(this.attr +"-set")) {
+		if (!tnavs[i].hasAttribute(this.attr + "-set")) {
 			return tnavs[i];
 		}		
 	}
@@ -124,13 +140,14 @@ Tabs.prototype.find_tnav = function(attr, name) {
 };
 
 /*
- * If btn_attr is given, all children of tnav that have this attribute 
- * will be returned, otherwise _all_ children of tnav will be returned.
+ * Returns all child nodes of the `this.tnav` element that match the selector 
+ * `this.btn_select` or all child nodes if `this.btn_select` isn't set.
+ * Make sure to only call this function once `this.tnav` has been fetched, 
+ * otherwise it will throw an error.
  */
-Tabs.prototype.find_btns = function(tnav, btn_attr) {
-	// Get all of tnav's children or those with the given btn_attr set
+Tabs.prototype.find_btns = function() {
 	return this.btn_select ? 
-		tnav.querySelectorAll(this.btn_select) : tnav.children;
+		this.tnav.querySelectorAll(this.btn_select) : this.tnav.children;
 };
 
 /*
@@ -138,7 +155,7 @@ Tabs.prototype.find_btns = function(tnav, btn_attr) {
  * Otherwise, searches all children of the given element for <A>s and 
  * returns the href attribute of the first <A> it could find.
  */
-Tabs.prototype.href = function(el) {
+Tabs.prototype.find_href = function(el) {
 	// If el is an <A> element itself, return it's href attribute
 	if (el.nodeName.toLowerCase() === "a") {
 		return el.getAttribute("href");
@@ -159,7 +176,7 @@ Tabs.prototype.click = function(event) {
 	// Prevent browser from actually scrolling to the anchor
 	event.preventDefault();
 	// Get the button's href attribute, we can't continue without
-	var href = this.href(event.target, this.btn_attr);
+	var href = this.find_href(event.currentTarget);
 	// If the button's href is set, let's open the according tab
 	!href || this.open(this.frag(href));	
 };
@@ -211,9 +228,9 @@ Tabs.prototype.update_frags = function(next) {
  */
 Tabs.prototype.show = function(frag) {
 	var t = this.tabs[frag];
-	t.btn.classList.add(this.btn_active);
-	t.tab.classList.add(this.tab_active);
-	t.tab.classList.remove(this.tab_hidden);
+	this.add_class(t.btn, this.btn_active);
+	this.add_class(t.tab, this.tab_active);
+	this.rem_class(t.tab, this.tab_hidden);
 };
 
 /*
@@ -221,9 +238,9 @@ Tabs.prototype.show = function(frag) {
  */
 Tabs.prototype.hide = function(frag) {
 	var t = this.tabs[frag];
-	t.btn.classList.remove(this.btn_active);
-	t.tab.classList.remove(this.tab_active);
-	t.tab.classList.add(this.tab_hidden);
+	this.rem_class(t.btn, this.btn_active);
+	this.rem_class(t.tab, this.tab_active);
+	this.add_class(t.tab, this.tab_hidden);
 };
 
 /*
@@ -268,11 +285,11 @@ Tabs.prototype.kill = function() {
 		if (this.tabs.hasOwnProperty(frag)) {
 			var t = this.tabs[frag];
 			// Remove all tab classes we might have set
-			t.tab.classList.remove(this.tab_class);
-			t.tab.classList.remove(this.tab_active);
-			t.tab.classList.remove(this.tab_hidden);
+			this.rem_class(t.tab, this.tab_class);
+			this.rem_class(t.tab, this.tab_active);
+			this.rem_class(t.tab, this.tab_hidden);
 			// Remove active button classes we might have set
-			t.btn.classList.remove(this.btn_active);
+			this.rem_class(t.btn, this.btn_active);
 			// Remove the button event listerner
 			t.btn.removeEventListener("click", t.evt, false);
 		}
@@ -281,7 +298,7 @@ Tabs.prototype.kill = function() {
 	this.tabs = {};
 	this.curr = null;
 	// Remove the "set" marker from the tab nav element
-	this.tnav.removeAttribute(this.attr +"-set");
+	this.tnav.removeAttribute(this.attr + "-set");
 };
 
 /*
@@ -291,12 +308,12 @@ Tabs.prototype.kill = function() {
  * implement some similar functionality yourself.
  */
 function initTabs(attr) {
-	attr = (attr === undefined) ? "data-tabs" : attr;
-	var tabnavs = document.querySelectorAll("["+attr+"]");
+	if (!attr) { attr = "data-tabs"; }
+	var tabnavs = document.querySelectorAll("[" + attr + "]");
 	var len = tabnavs.length;
 	for (var i = 0; i < len; ++i) {
 		(new Tabs({
-			"name":tabnavs[i].getAttribute(attr), 
+			"name": tabnavs[i].getAttribute(attr), 
 			"attr": attr
 		})).init();
 	}
