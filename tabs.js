@@ -39,9 +39,7 @@ function Tabs(o) {
 }
 
 /*
- * Goes through all properties of the provided object and checks if a
- * property of the same name exists in this class. If so, the property 
- * will be overriden with the value provided in the given object.
+ * Return the property `opt` of object `obj`, if present, otherwise `def`.
  */
 Tabs.prototype.get_opt = function(obj, opt, def) {
 	return obj.hasOwnProperty(opt) ? obj[opt] : def;
@@ -51,16 +49,16 @@ Tabs.prototype.get_opt = function(obj, opt, def) {
  * Add the given CSS class to the given element. If the given class is falsy 
  * (for example `null` or an empty string), this function does nothing.
  */
-Tabs.prototype.add_class = function(ele, c) {
-	c && ele.classList.add(c);
+Tabs.prototype.add_class = function(e, c) {
+	e && c && ele.classList.add(c);
 };
 
 /*
  * Remove the given CSS class to the given element. If the given class is falsy
  * (for example `null` or an empty string), this function does nothing.
  */
-Tabs.prototype.rem_class = function(ele, c) {
-	c && ele.classList.remove(c);
+Tabs.prototype.rem_class = function(e, c) {
+	e && c && ele.classList.remove(c);
 };
 
 /*
