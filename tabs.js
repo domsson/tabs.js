@@ -39,10 +39,10 @@ function Tabs(o) {
 }
 
 /*
- * Return the property `opt` of object `obj`, if present, otherwise `def`.
+ * Return the property `p` of object `o`, if present, otherwise `d`.
  */
-Tabs.prototype.get_opt = function(obj, opt, def) {
-	return obj.hasOwnProperty(opt) ? obj[opt] : def;
+Tabs.prototype.get_opt = function(o, p, d) {
+	return o && o.hasOwnProperty(p) ? o[p] : d;
 };
 
 /*
