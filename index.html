@@ -5,7 +5,18 @@
 	<title>tabs.js Example</title>
 	<script src="tabs.js"></script>
 	<script>
-		function init() { initTabs(); }
+		function init()
+		{
+			let attr = "data-tabs";
+			let sets = document.querySelectorAll(`[${attr}]`);
+			let opts = {};
+			for (let set of sets)
+			{
+				opts.name = set.getAttribute(attr);
+				opts.attr = attr;
+				(new Tabs(opts)).init();
+			}
+		}
 		document.addEventListener("DOMContentLoaded", init);
 	</script>
 	<style type="text/css">

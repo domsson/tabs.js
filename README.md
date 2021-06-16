@@ -75,16 +75,19 @@ attribute on the element that has the `data-tabs` attribute set. If you pass
 in a custom attribute, that  will be used instead of `data-tabs`.
  
 If you have multiple tabsets on your page, create one `Tabs` instance 
-for each of them. This can be done in a loop. `tabs.js` comes with a 
-function that does that, `initTabs(attr)`. You could use it like this:
+for each of them. This can be done in a loop, for example like this:
 
 	function setupTabs() {
-		initTabs("data-tabs");
+		let attr = "data-tabs";
+		let sets = document.querySelectorAll(`[${attr}]`);
+		let opts = {};
+		for (let set of sets) {
+			opts.name = set.getAttribute(attr);
+			opts.attr = attr;
+			(new Tabs(opts)).init();
+		}
 	}
 	window.onload = setupTabs;
-	
-If you don't need that function (or its name collides with another one) 
-you can always rename or remove it.
  
 ## Options
 
@@ -107,7 +110,7 @@ a new `Tabs` instance. Possible properties are as follows:
 
 ### Example
 
-    var tabset = new Tabs({ "attr": "data-foobar" });
+    let tabset = new Tabs({ "attr": "data-foobar" });
     tabset.init();
     
 ## API
@@ -129,8 +132,6 @@ sure the new or removed tabs are recognized correctly.
 
 Once browser support is solid enough, we should...
 
-- Replace most occurences of `var` with `let`
-- Replace `for` loops with `for of` loops for array iteration
 - Replace `classList.remove`, `classList.add` with `classList.replace`
 - Use `Object.assign` to set (default) options
 - Maybe make it so that the browser back button works after a change
