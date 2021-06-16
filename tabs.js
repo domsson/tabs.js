@@ -50,7 +50,7 @@ Tabs.prototype.get_opt = function(o, p, d) {
  * (for example `null` or an empty string), this function does nothing.
  */
 Tabs.prototype.add_class = function(e, c) {
-	e && c && ele.classList.add(c);
+	e && c && e.classList.add(c);
 };
 
 /*
@@ -58,7 +58,7 @@ Tabs.prototype.add_class = function(e, c) {
  * (for example `null` or an empty string), this function does nothing.
  */
 Tabs.prototype.rem_class = function(e, c) {
-	e && c && ele.classList.remove(c);
+	e && c && e.classList.remove(c);
 };
 
 /*
