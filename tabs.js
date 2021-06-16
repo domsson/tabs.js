@@ -77,51 +77,45 @@ class Tabs
 	 */
 	init()
 	{
-		// Find the tab navigation based on `attr` and `name`
-		this.tnav = this.find_tnav();
-		// Abort if no suitable element could be found
+		this.tnav = this.find_tnav(); // find tab nav based on `attr` and `name`
 		if (!this.tnav) return false;
-		// Get the tab navigation buttons
-		let btns = this.find_btns();
-		// Get the current URL anchors as array
-		let frags = this.frags(this.frag());
-		// Loop over all tab buttons we've found
+		
+		let btns = this.find_btns(); // get the tab nav buttons
+		let frags = this.frags(this.frag()); // get current URL anchors as array
+		
 		for (let btn of btns)
 		{
-			// Get the button's 'href' attribute (required)
-			let href = this.find_href(btn);
+			let href = this.find_href(btn); // get button's 'href' attribute
 			if (!href) continue;
-			// Extract the anchor string from the `href` (remove the #)
-			let frag = this.frag(href);
+
+			let frag = this.frag(href); // extract anchor string (remove '#')
 			if (!frag) continue;
-			// Find the tab content element corresponding to this button
-			let tab = document.getElementById(frag);
+
+			let tab = document.getElementById(frag); // find corresponding tab
 			if (!tab) continue;
-			// Add the general button class to this button
-			this.add_class(btn, this.btn_class);
-			// Add the general tab class to the tab content element
-			this.add_class(tab, this.tab_class);
-			// Bind our tab button click handler to the button
+
+			this.add_class(btn, this.btn_class); // add general button class
+			this.add_class(tab, this.tab_class); // add general tab class
+
 			let handler = this.click.bind(this);
 			btn.addEventListener("click", handler, false);
+
 			// Add this tab button and tab content to our state (this.tabs)
 			this.tabs[frag] = { "btn": btn, "tab": tab, "evt": handler };
+
 			// Mark this tab button as active (this.curr), if appropriate
 			if (frags.indexOf(frag) !== -1 || this.curr === null)
 			{
 				this.curr = frag;
 			}
 		}
-		// No relevant buttons identified, aborting
+		
 		if (!Object.keys(this.tabs).length) return false;
-		// Hide/deactive all tabs first
-		this.hide_all();
-		// Now show only the current tab
-		this.show(this.curr);
-		// Add tab navigation class
-		this.add_class(this.tnav, this.nav_class);
-		// Mark this set of tabs as successfully processed ('set')
-		this.tnav.setAttribute(`${this.attr}-set`, "");
+
+		this.hide_all(); // hide/deactivate all tabs first
+		this.show(this.curr); // show only the current tab
+		this.add_class(this.tnav, this.nav_class); // add tab nav class
+		this.tnav.setAttribute(`${this.attr}-set`, ""); // mark this set as processed
 		return true;
 	}
 	
@@ -136,13 +130,11 @@ class Tabs
 	 */
 	find_tnav()
 	{
-		// If `tnav` is already set, we do nothing and return it
-		if (this.tnav) return this.tnav;
-		// Formulate the appropriate CSS selector
+		if (this.tnav) return this.tnav; // nav already set, do nothing
+
 		let q = `[${this.attr}="${this.name ? this.name : ''}"]`;
-		// Find all elements that match our CSS selector
 		let tnavs = document.querySelectorAll(q);
-		// Iterate over all elements that match our query
+
 		for (let tnav of tnavs)
 		{
 			// We found a matching element that has not been processed yet 
@@ -151,7 +143,6 @@ class Tabs
 				return tnav;
 			}
 		}
-		// Nothing found, return null
 		return null;
 	}
 	
@@ -192,14 +183,10 @@ class Tabs
 	 */
 	click(evt)
 	{
-		// If no event is supplied, we can't do our job!
 		if (!evt) return;
-		// Prevent browser from actually scrolling to the anchor
-		evt.preventDefault();
-		// Get the button's href attribute, we can't continue without
+		evt.preventDefault(); // prevent browser from scrolling to anchor
 		let href = this.find_href(evt.currentTarget);
-		// If the button's href is set, let's open the according tab
-		!href || this.open(this.frag(href));	
+		!href || this.open(this.frag(href)); // if `href` given, open the tab
 	}
 	
 	/*
@@ -209,20 +196,12 @@ class Tabs
 	 */
 	open(frag)
 	{
-		// Abort if the given tab is already the active tab
-		if (frag === this.curr) return;
-		// Abort if the given tab is not known to this tabset
-		if (!this.tabs[frag]) return;
-		// Abort if there is no currently active tab (init() failed?)
-		if (!this.tabs[this.curr]) return;
-		// Hide the previously active tab
-		this.hide(this.curr);
-		// Show the tab that corresponds with the clicked tab button
-		this.show(frag);
-		// Update the URL fragments and our internal state accordingly
-		this.update_frags(frag);
-		// Update the internal state
-		this.curr = frag;
+		if (frag === this.curr) return; // tab already active
+		if (!this.tabs[frag]) return; // tab doens't belong to this tabset
+		if (!this.tabs[this.curr]) return; // currently no active tab (!?)
+		this.hide(this.curr); // hide the previously active tab
+		this.show(frag); // show the tab corresponding to the clicked button
+		this.update_frags(frag); // update URL fragments
 	}
 	
 	/*
@@ -233,17 +212,15 @@ class Tabs
 	update_frags(next)
 	{
 		if (this.set_frags === false) return;
-		// Get an array with all URL anchors
-		let frags = this.frags(this.frag());
-		// See if the previously active tab is in the URL anchors
-		let idx = frags.indexOf(this.curr);
+		let frags = this.frags(this.frag()); // get all anchors as array
+		let idx = frags.indexOf(this.curr); // check if active tab is in anchors
+
 		// Add tab ID to URL fragments if the previous tab's ID is not in 
 		// there currently, otherwise replace the previous tab's ID
 		frags[idx == -1 ? frags.length : idx] = next;
-		// Build the updated URL anchor string
-		let frag_str = "#" + frags.join(this.frag_sep);
-		// Replace the URL anchor string with the updated one
-		history.replaceState(undefined, undefined, frag_str);
+		let frag_str = "#" + frags.join(this.frag_sep); // build updated anchor string
+		history.replaceState(undefined, undefined, frag_str); // replace anchor string
+		this.curr = next; // update state
 	}
 	
 	/*
