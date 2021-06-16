@@ -155,8 +155,8 @@ class Tabs
 	find_btns()
 	{
 		return this.btn_select ? 
-			this.tnav.querySelectorAll(this.btn_select)
-			: this.tnav.children;
+			this.tnav.querySelectorAll(this.btn_select) :
+			this.tnav.children;
 	}
 	
 	/*
