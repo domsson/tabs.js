@@ -22,18 +22,21 @@ class Tabs
 {
 	constructor(o)
 	{
-		// Get options (or set to sensible defaults)
-		this.attr       = this.get_opt(o, "attr",       "data-tabs");
-		this.name       = this.get_opt(o, "name",       null);
-		this.nav_class  = this.get_opt(o, "nav_class",  "tab-nav");
-		this.btn_select = this.get_opt(o, "btn_select", null);
-		this.btn_class  = this.get_opt(o, "btn_class",  "tab-button");
-		this.btn_active = this.get_opt(o, "btn_active", "active");
-		this.tab_class  = this.get_opt(o, "tab_class",  "tab");
-		this.tab_active = this.get_opt(o, "tab_active", "active");
-		this.tab_hidden = this.get_opt(o, "tab_hidden", "hidden");
-		this.set_frags  = this.get_opt(o, "set_frags",  true);
-		this.frag_sep   = this.get_opt(o, "frag_sep",   ":");
+		// Set sensible defaults for options
+		this.attr       = "data-tabs";
+		this.name       = null;
+		this.nav_class  = "tab-nav";
+		this.btn_select = null;
+		this.btn_class  = "tab-button";
+		this.btn_active = "active";
+		this.tab_class  = "tab";
+		this.tab_active = "active";
+		this.tab_hidden = "hidden";
+		this.set_frags  = true;
+		this.frag_sep   = ":";
+
+		// Possibly overwrite with user provided options
+		Object.assign(this, o);
 		
 		// State variables 
 		this.tnav = null;
@@ -41,14 +44,6 @@ class Tabs
 		this.curr = null;
 	}
 
-	/*
-	 * Return the property `p` of object `o`, if present, otherwise `d`.
-	 */
-	get_opt(o, p, d)
-	{
-		return o && o.hasOwnProperty(p) ? o[p] : d;
-	}
-	
 	/*
 	 * Add the given CSS class to the given element. If the given class is falsy 
 	 * (for example `null` or an empty string), this function does nothing.
