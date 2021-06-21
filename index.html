@@ -7,14 +7,10 @@
 	<script>
 		function init()
 		{
-			let attr = "data-tabs";
-			let sets = document.querySelectorAll(`[${attr}]`);
-			let opts = {};
+			let sets = document.querySelectorAll("[data-tabs]");
 			for (let set of sets)
 			{
-				opts.name = set.getAttribute(attr);
-				opts.attr = attr;
-				(new Tabs(opts)).init();
+				(new Tabs()).init();
 			}
 		}
 		document.addEventListener("DOMContentLoaded", init);
