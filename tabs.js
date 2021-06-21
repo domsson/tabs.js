@@ -232,9 +232,9 @@ class Tabs
 	/*
 	 * Hide/deactivate the tab identified by the given fragment (id).
 	 */
-	hide(frag)
+	hide(id)
 	{
-		let t = this.tabs[frag];
+		let t = this.tabs[id];
 		this.rem_class(t.btn, this.btn_active);
 		this.rem_class(t.tab, this.tab_active);
 		this.add_class(t.tab, this.tab_hidden);
@@ -256,9 +256,9 @@ class Tabs
 	 * If the string doesn't contain a fragment, "" is returned.
 	 * Example: "http://example.com#chapter-1" will return "chapter-1".
 	 */
-	frag(str)
+	frag(str=document.URL)
 	{
-		let url = (str) ? str.split("#") : document.URL.split("#");
+		let url = str.split("#");
 		return (url.length > 1) ? url[1] : "";
 	}
 	
