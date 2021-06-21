@@ -24,6 +24,7 @@ included HTML file to get started.
 - Can be configured to some degree
 - Extensively commented source code
 - Minified version is ~3 KB (and only ~1 KB gzipped)
+- Does not support Internet Explorer
 
 ## Markup requirements
 
@@ -128,11 +129,7 @@ tabset at any point in time. If you ever need to dynamically add or
 remove a tab from a tabset, you could call `kill()` and `init()` to make 
 sure the new or removed tabs are recognized correctly.
 	
-## Things to change in the future
+## Things to (maybe) change in the future
 
-Once browser support is solid enough, we should...
-
-- Replace `classList.remove`, `classList.add` with `classList.replace`
-- Use `Object.assign` to set (default) options
 - Maybe make it so that the browser back button works after a change
   of the fragmen part of the URL - not sure about this one yet
