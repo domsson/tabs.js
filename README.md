@@ -24,7 +24,10 @@ CSS file.
 - Can be configured to some degree
 - Extensively commented source code
 - Minified version is ~3 KB (and only ~1 KB gzipped)
-- Does not support Internet Explorer
+
+## Limitations
+
+- Does not support Internet Explorer or other outdated browsers
 
 ## Markup requirements
 
