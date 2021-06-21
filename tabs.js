@@ -245,12 +245,9 @@ class Tabs
 	 */
 	hide_all()
 	{
-		for (let frag in this.tabs)
+		for (let id in this.tabs)
 		{
-			if (this.tabs.hasOwnProperty(frag))
-			{
-				this.hide(frag);
-			}
+			this.hide(id);
 		}
 	}
 	
@@ -284,9 +281,9 @@ class Tabs
 	 */
 	kill()
 	{
-		for (let frag in this.tabs)
+		for (let id in this.tabs)
 		{
-			let t = this.tabs[frag];
+			let t = this.tabs[id];
 			
 			// Remove all tab classes we might have set
 			this.rem_class(t.tab, this.tab_class);
