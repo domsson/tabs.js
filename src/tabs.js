@@ -99,7 +99,7 @@ class Tabs
 			this.tabs[id] = { "btn": btn, "tab": tab, "evt": handler };
 
 			// Mark this tab button as active (this.curr), if appropriate
-			if (frags.indexOf(id) !== -1 || this.curr === null)
+			if (frags.indexOf(id) >= 0 || this.curr === null)
 			{
 				this.curr = id;
 			}
