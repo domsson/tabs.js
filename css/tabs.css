@@ -1,0 +1,47 @@
+.tab-set {
+	display: grid;
+	grid-template-rows: auto auto;
+	grid-template-columns: auto;
+}
+
+.tab-nav {
+	grid-row-start: 1;
+	grid-column-start: 1;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	border-bottom: 1px solid #ddd;
+}
+
+.tab-button {
+	user-select: none;
+	margin-bottom: -1px;
+}
+
+.tab-button a {
+	display: block;
+	padding: .5rem 1rem;
+	text-decoration: none;
+	color: #555;
+	outline: none;
+}
+
+.tab-button.active {
+	border-bottom: 1px solid #555
+}
+
+.tab-button.active a {
+	color: inherit;
+}
+
+.tab {
+	grid-row-start: 2;
+	grid-column-start: 1;
+	padding: 0 1rem;
+}
+
+.tab.hidden {
+	visibility: hidden;
+}
+

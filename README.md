@@ -7,8 +7,8 @@ into tabs.
 
 No actual visual changes will be performed, `tabs.js` just adds/removes 
 CSS classes to the buttons and content elements. Making your tabs look 
-like tabs is up to you. But don't worry, it ain't hard. Check the 
-included HTML file to get started.
+like tabs is up to you. But don't worry, it's easy. Check the included 
+CSS file.
 
 ## Features
 
@@ -73,7 +73,7 @@ Create a `Tabs` instance once the DOM has loaded. For example:
 	
 Once `tabs.js` has processed a tab set, it will set the `data-tabs-set` 
 attribute on the element that has the `data-tabs` attribute set. If you pass 
-in a custom attribute, that  will be used instead of `data-tabs`.
+in a custom attribute, that will be used instead of `data-tabs`.
  
 If you have multiple tabsets on your page, create one `Tabs` instance 
 for each of them. This can be done in a loop, for example like this:
