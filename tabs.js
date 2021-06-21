@@ -291,25 +291,28 @@ class Tabs
 	{
 		for (let frag in this.tabs)
 		{
-			if (this.tabs.hasOwnProperty(frag))
-			{
-				let t = this.tabs[frag];
-				// Remove all tab classes we might have set
-				this.rem_class(t.tab, this.tab_class);
-				this.rem_class(t.tab, this.tab_active);
-				this.rem_class(t.tab, this.tab_hidden);
-				// Remove button classes we might have set
-				this.rem_class(t.btn, this.btn_class);
-				this.rem_class(t.btn, this.btn_active);
-				// Remove the button event listerner
-				t.btn.removeEventListener("click", t.evt, false);
-			}
+			let t = this.tabs[frag];
+			
+			// Remove all tab classes we might have set
+			this.rem_class(t.tab, this.tab_class);
+			this.rem_class(t.tab, this.tab_active);
+			this.rem_class(t.tab, this.tab_hidden);
+			
+			// Remove button classes we might have set
+			this.rem_class(t.btn, this.btn_class);
+			this.rem_class(t.btn, this.btn_active);
+
+			// Remove the button event listerner
+			t.btn.removeEventListener("click", t.evt);
 		}
+
 		// Forget all about the tabs and current tab
 		this.tabs = {};
 		this.curr = null;
+		
 		// Remove class from nav
 		this.rem_class(this.tnav, this.nav_class);
+
 		// Remove the "set" marker from the tab nav element
 		this.tnav.removeAttribute(`${this.attr}-set`);
 	}
