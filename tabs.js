@@ -83,10 +83,10 @@ class Tabs
 			let href = this.find_href(btn); // get button's 'href' attribute
 			if (!href) continue;
 
-			let frag = this.frag(href); // extract anchor string (remove '#')
-			if (!frag) continue;
+			let id = this.frag(href); // extract anchor string (remove '#')
+			if (!id) continue;
 
-			let tab = document.getElementById(frag); // find corresponding tab
+			let tab = document.getElementById(id); // find corresponding tab
 			if (!tab) continue;
 
 			this.add_class(btn, this.btn_class); // add general button class
@@ -96,12 +96,12 @@ class Tabs
 			btn.addEventListener("click", handler, false);
 
 			// Add this tab button and tab content to our state (this.tabs)
-			this.tabs[frag] = { "btn": btn, "tab": tab, "evt": handler };
+			this.tabs[id] = { "btn": btn, "tab": tab, "evt": handler };
 
 			// Mark this tab button as active (this.curr), if appropriate
-			if (frags.indexOf(frag) !== -1 || this.curr === null)
+			if (frags.indexOf(id) !== -1 || this.curr === null)
 			{
-				this.curr = frag;
+				this.curr = id;
 			}
 		}
 		
@@ -133,10 +133,7 @@ class Tabs
 		for (let tnav of tnavs)
 		{
 			// We found a matching element that has not been processed yet 
-			if (!tnav.hasAttribute(`${this.attr}-set`))
-			{
-				return tnav;
-			}
+			if (!tnav.hasAttribute(`${this.attr}-set`)) return tnav;
 		}
 		return null;
 	}
@@ -189,14 +186,14 @@ class Tabs
 	 * un-marking the previously opened tab (using the set CSS classes) and 
 	 * then updates the URL fragments and the internal state accordingly.
 	 */
-	open(frag)
+	open(id)
 	{
-		if (frag === this.curr) return; // tab already active
-		if (!this.tabs[frag]) return; // tab doens't belong to this tabset
+		if (id === this.curr) return; // tab already active
+		if (!this.tabs[id]) return; // tab doens't belong to this tabset
 		if (!this.tabs[this.curr]) return; // currently no active tab (!?)
 		this.hide(this.curr); // hide the previously active tab
-		this.show(frag); // show the tab corresponding to the clicked button
-		this.update_frags(frag); // update URL fragments
+		this.show(id); // show the tab corresponding to the clicked button
+		this.update_frags(id); // update URL fragments
 	}
 	
 	/*
