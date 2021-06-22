@@ -72,8 +72,8 @@ class Tabs
 	 */
 	init()
 	{
-		this.tnav = this.find_tnav(); // find tab nav based on `attr` and `name`
-		if (!this.tnav) return false;
+		// find tab nav based on `attr` and `name`
+		if (!(this.tnav = this.find_tnav())) return false;
 		
 		let btns = this.find_btns(); // get the tab nav buttons
 		let frags = this.frags(this.frag()); // get current URL anchors as array
