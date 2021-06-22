@@ -110,14 +110,14 @@ class Tabs
 		this.hide_all(); // hide/deactivate all tabs first
 		this.show(this.curr); // show only the current tab
 		this.add_class(this.tnav, this.nav_class); // add tab nav class
-		this.tnav.setAttribute(`${this.attr}-set`, ""); // mark this set as processed
+		this.tnav.setAttribute(`${this.attr}-set`, ""); // mark set as processed
 		return true;
 	}
 	
 	/*
-	 * Tries to find an element that matches out `this.attr` attribute, possibily 
+	 * Tries to find an element that matches the `this.attr` attribute, possibily 
 	 * with the given attribute value `this.name`, if set, which has not yet been 
-	 * processed (as indicated by the presence of the "<this.attr>-set" attribute. 
+	 * processed (as indicated by the presence of the "<this.attr>-set" attribute). 
 	 * Returns the first matching element that has not already been processed or
 	 * null if no matching element was found or all of them were already processed.
 	 * If `this.tnav` is already set (has any truthy value), this function does 
@@ -127,12 +127,13 @@ class Tabs
 	{
 		if (this.tnav) return this.tnav; // nav already set, do nothing
 
+		// get all elements with the required attribute set
 		let q = `[${this.attr}="${this.name ? this.name : ''}"]`;
 		let tnavs = document.querySelectorAll(q);
 
 		for (let tnav of tnavs)
 		{
-			// We found a matching element that has not been processed yet 
+			// make sure this nav/tabset hasn't been processed yet
 			if (!tnav.hasAttribute(`${this.attr}-set`)) return tnav;
 		}
 		return null;
@@ -175,7 +176,7 @@ class Tabs
 	 */
 	click(evt)
 	{
-		if (!evt) return;
+		//if (!evt) return;
 		evt.preventDefault(); // prevent browser from scrolling to anchor
 		let href = this.find_href(evt.currentTarget);
 		!href || this.open(this.frag(href)); // if `href` given, open the tab
@@ -190,10 +191,10 @@ class Tabs
 	{
 		if (id === this.curr) return; // tab already active
 		if (!this.tabs[id]) return; // tab doens't belong to this tabset
-		if (!this.tabs[this.curr]) return; // currently no active tab (!?)
-		this.hide(this.curr); // hide the previously active tab
+		if (this.tabs[this.curr]) this.hide(this.curr); // hide current tab
 		this.show(id); // show the tab corresponding to the clicked button
 		this.update_frags(id); // update URL fragments
+		this.curr = id; // update state
 	}
 	
 	/*
@@ -212,15 +213,14 @@ class Tabs
 		frags[idx == -1 ? frags.length : idx] = next;
 		let frag_str = "#" + frags.join(this.frag_sep); // build updated anchor string
 		history.replaceState(undefined, undefined, frag_str); // replace anchor string
-		this.curr = next; // update state
 	}
 	
 	/*
 	 * Show/activate the tab identified by the given fragment (id).
 	 */
-	show(frag)
+	show(id)
 	{
-		let t = this.tabs[frag];
+		let t = this.tabs[id];
 		this.add_class(t.btn, this.btn_active);
 		this.add_class(t.tab, this.tab_active);
 		this.rem_class(t.tab, this.tab_hidden);
@@ -264,9 +264,9 @@ class Tabs
 	 * If the input string is empty, an empty array is returned.
 	 * Example: "#hello:world" will return ["hello", "world"].
 	 */
-	frags(frag)
+	frags(str)
 	{
-		return frag ? frag.split(this.frag_sep) : [];
+		return str ? str.split(this.frag_sep) : [];
 	}
 	
 	/*
