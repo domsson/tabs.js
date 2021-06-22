@@ -78,16 +78,12 @@ class Tabs
 		let btns = this.find_btns(); // get the tab nav buttons
 		let frags = this.frags(this.frag()); // get current URL anchors as array
 		
+		let href, id, tab;
 		for (let btn of btns)
 		{
-			let href = this.find_href(btn); // get button's 'href' attribute
-			if (!href) continue;
-
-			let id = this.frag(href); // extract anchor string (remove '#')
-			if (!id) continue;
-
-			let tab = document.getElementById(id); // find corresponding tab
-			if (!tab) continue;
+			if (!(href = this.find_href(btn))) continue; // get button's 'href' attribute
+			if (!(id = this.frag(href))) continue; // extract anchor string (remove '#')
+			if (!(tab = document.getElementById(id))) continue; // find corresponding tab
 
 			this.add_class(btn, this.btn_class); // add general button class
 			this.add_class(tab, this.tab_class); // add general tab class
