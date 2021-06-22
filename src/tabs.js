@@ -110,7 +110,7 @@ class Tabs
 		this.hide_all(); // hide/deactivate all tabs first
 		this.show(this.curr); // show only the current tab
 		this.add_class(this.tnav, this.nav_class); // add tab nav class
-		this.tnav.setAttribute(`${this.attr}-set`, ""); // mark set as processed
+		this.tnav.setAttribute(this.attr + "-set", ""); // mark set as processed
 		return true;
 	}
 	
@@ -134,7 +134,7 @@ class Tabs
 		for (let tnav of tnavs)
 		{
 			// make sure this nav/tabset hasn't been processed yet
-			if (!tnav.hasAttribute(`${this.attr}-set`)) return tnav;
+			if (!tnav.hasAttribute(this.attr + "-set")) return tnav;
 		}
 		return null;
 	}
@@ -299,7 +299,7 @@ class Tabs
 		this.rem_class(this.tnav, this.nav_class);
 
 		// Remove the "set" marker from the tab nav element
-		this.tnav.removeAttribute(`${this.attr}-set`);
+		this.tnav.removeAttribute(this.attr + "-set");
 	}
 }
 
