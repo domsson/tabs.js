@@ -200,7 +200,7 @@ class Tabs
 	 */
 	update_frags(next)
 	{
-		if (this.set_frags === false) return;
+		if (!this.set_frags) return;
 		let frags = this.frags(this.frag()); // get all anchors as array
 		let idx = frags.indexOf(this.curr); // check if active tab is in anchors
 
