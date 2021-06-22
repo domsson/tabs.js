@@ -93,7 +93,7 @@ class Tabs
 			this.add_class(tab, this.tab_class); // add general tab class
 
 			let handler = this.click.bind(this);
-			btn.addEventListener("click", handler, false);
+			btn.addEventListener("click", handler);
 
 			// Add this tab button and tab content to our state (this.tabs)
 			this.tabs[id] = { "btn": btn, "tab": tab, "evt": handler };
