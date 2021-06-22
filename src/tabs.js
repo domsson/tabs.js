@@ -207,8 +207,8 @@ class Tabs
 		// Add tab ID to URL fragments if the previous tab's ID is not in 
 		// there currently, otherwise replace the previous tab's ID
 		frags[idx == -1 ? frags.length : idx] = next;
-		let frag_str = "#" + frags.join(this.frag_sep); // build updated anchor string
-		history.replaceState(undefined, undefined, frag_str); // replace anchor string
+		// replace anchor string with updated version
+		history.replaceState(undefined, undefined, "#"+frags.join(this.frag_sep));
 	}
 	
 	/*
