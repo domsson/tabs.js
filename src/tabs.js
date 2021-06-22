@@ -160,10 +160,7 @@ class Tabs
 	find_href(e)
 	{
 		// If e is an <A> element itself, return it's href attribute
-		if (e.nodeName.toLowerCase() === "a")
-		{
-			return e.getAttribute("href");
-		}
+		if (e.nodeName.toLowerCase() === "a") return e.getAttribute("href");
 		// Find the first <A> within e and returns its href attribute
 		let a = e.querySelector("a");
 		return a ? a.getAttribute("href") : null;
