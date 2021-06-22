@@ -176,7 +176,6 @@ class Tabs
 	 */
 	click(evt)
 	{
-		//if (!evt) return;
 		evt.preventDefault(); // prevent browser from scrolling to anchor
 		let href = this.find_href(evt.currentTarget);
 		!href || this.open(this.frag(href)); // if `href` given, open the tab
