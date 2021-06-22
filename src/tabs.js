@@ -75,8 +75,9 @@ class Tabs
 		// find tab nav based on `attr` and `name`
 		if (!(this.tnav = this.find_tnav())) return false;
 		
-		let btns = this.find_btns(); // get the tab nav buttons
-		let frags = this.frags(this.frag()); // get current URL anchors as array
+		// get tab nav buttons and current URL anchors
+		let btns = this.find_btns();
+		let frags = this.frags(this.frag());
 		
 		let href, id, tab;
 		for (let btn of btns)
@@ -95,10 +96,7 @@ class Tabs
 			this.tabs[id] = { "btn": btn, "tab": tab, "evt": handler };
 
 			// Mark this tab button as active (this.curr), if appropriate
-			if (frags.indexOf(id) >= 0 || this.curr === null)
-			{
-				this.curr = id;
-			}
+			if (frags.indexOf(id) >= 0 || this.curr === null) this.curr = id;
 		}
 		
 		if (!Object.keys(this.tabs).length) return false;
