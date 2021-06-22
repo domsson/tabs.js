@@ -190,13 +190,13 @@ class Tabs
 	/*
 	 * Updates the current (this.curr) tab ID with the one provided in next.
 	 * Removes the current ID from the URL anchor and replaces it with the 
-	 * new one, then updates the internal state (this.curr) as well.
+	 * new one.
 	 */
 	update_frags(next)
 	{
 		if (!this.set_frags) return;
-		let frags = this.frags(this.frag()); // get all anchors as array
-		let idx = frags.indexOf(this.curr); // check if active tab is in anchors
+		let frags = this.frags(this.frag()); // get all anchors
+		let idx = frags.indexOf(this.curr); // find the active tab in anchors
 
 		// Add tab ID to URL fragments if the previous tab's ID is not in 
 		// there currently, otherwise replace the previous tab's ID
@@ -232,10 +232,7 @@ class Tabs
 	 */
 	hide_all()
 	{
-		for (let id in this.tabs)
-		{
-			this.hide(id);
-		}
+		for (let id in this.tabs) this.hide(id);
 	}
 	
 	/*
